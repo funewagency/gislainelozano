@@ -1,0 +1,7 @@
+# Package manager lockfiles not used by this project
+pnpm-lock.yaml
+yarn.lock
+package-lock.json
+
+# Session transcripts
+session-*.md

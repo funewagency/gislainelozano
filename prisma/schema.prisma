@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model CmsSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  updatedAt DateTime @updatedAt
+}
+
+model Contact {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String
+  message   String?
+  source    String?
+  medium    String?
+  campaign  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CmsState {
+  id        String   @id @default(cuid())
+  tenant    String   @unique
+  data      String
+  version   Int      @default(1)
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+}
+
+model AnalyticsSetting {
+  id          String   @id @default("default")
+  ga4Id       String?
+  fbPixelId   String?
+  gAdsId      String?
+  gAdsLabel   String?
+  updatedAt   DateTime @updatedAt
+}
+
+model CmsRevision {
+  id        String   @id @default(cuid())
+  tenant    String
+  version   Int
+  data      String
+  summary   String?
+  createdBy String?
+  createdAt DateTime @default(now())
+
+  @@index([tenant, version])
+}

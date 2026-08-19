@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="768" height="1344" viewBox="0 0 768 1344">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#19396C"/>
+      <stop offset="100%" stop-color="#1E4680"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#DF823C"/>
+      <stop offset="100%" stop-color="#E8D5A3"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="35%" r="40%">
+      <stop offset="0%" stop-color="#DF823C" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#19396C" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="768" height="1344" fill="url(#bg)"/>
+  <rect width="768" height="1344" fill="url(#glow)"/>
+  <circle cx="384" cy="480" r="160" fill="none" stroke="url(#gold)" stroke-width="1.5" opacity="0.25"/>
+  <circle cx="384" cy="480" r="120" fill="none" stroke="url(#gold)" stroke-width="1" opacity="0.15"/>
+  <circle cx="384" cy="440" r="70" fill="#DF823C" opacity="0.08"/>
+  <text x="384" y="460" text-anchor="middle" font-family="Georgia, serif" font-size="56" fill="#DF823C" opacity="0.7">G</text>
+  <line x1="284" y1="700" x2="484" y2="700" stroke="#DF823C" stroke-width="0.5" opacity="0.2"/>
+  <text x="384" y="750" text-anchor="middle" font-family="Georgia, serif" font-size="22" fill="rgba(255,255,255,0.35)" letter-spacing="10">GISLAINE</text>
+  <text x="384" y="790" text-anchor="middle" font-family="Georgia, serif" font-size="22" fill="rgba(255,255,255,0.35)" letter-spacing="10">LOZANO</text>
+  <line x1="284" y1="820" x2="484" y2="820" stroke="#DF823C" stroke-width="0.5" opacity="0.2"/>
+  <text x="384" y="880" text-anchor="middle" font-family="sans-serif" font-size="12" fill="rgba(223,130,60,0.4)" letter-spacing="5">MENTORA DE VENDAS</text>
+</svg>

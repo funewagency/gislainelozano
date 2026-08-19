@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="768" height="1344" viewBox="0 0 768 1344">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0.3" y2="1">
+      <stop offset="0%" stop-color="#1E4680"/>
+      <stop offset="100%" stop-color="#19396C"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#DF823C"/>
+      <stop offset="100%" stop-color="#E8D5A3"/>
+    </linearGradient>
+  </defs>
+  <rect width="768" height="1344" fill="url(#bg)"/>
+  <rect x="100" y="200" width="568" height="900" fill="none" stroke="url(#gold)" stroke-width="0.5" opacity="0.1"/>
+  <circle cx="384" cy="550" r="100" fill="none" stroke="#DF823C" stroke-width="1" opacity="0.2"/>
+  <text x="384" y="570" text-anchor="middle" font-family="Georgia, serif" font-size="48" fill="#DF823C" opacity="0.5">GL</text>
+  <text x="384" y="800" text-anchor="middle" font-family="Georgia, serif" font-size="18" fill="rgba(255,255,255,0.25)" letter-spacing="6">ESTRATEGISTA</text>
+  <text x="384" y="840" text-anchor="middle" font-family="Georgia, serif" font-size="18" fill="rgba(255,255,255,0.25)" letter-spacing="6">DE VENDAS</text>
+</svg>
