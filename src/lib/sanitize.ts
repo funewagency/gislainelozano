@@ -31,8 +31,8 @@ export function sanitizeInput(input: unknown, maxLength = 2000): string {
   str = str.replace(/\0/g, '');
 
   // Remove tags perigosas comuns
-  str = str.replace(/<\s*(script|iframe|object|embed|applet|meta|link|style)[^>]*>.*?<\s*\/\s*\1\s*>/gis, '');
-  str = str.replace(/<\s*(script|iframe|object|embed|applet|meta|link|style)[^>]*\/?>/gis, '');
+  str = str.replace(/<\s*(script|iframe|object|embed|applet|meta|link|style)[^>]*>[\s\S]*?<\s*\/\s*\1\s*>/gi, '');
+  str = str.replace(/<\s*(script|iframe|object|embed|applet|meta|link|style)[^>]*\/?>/gi, '');
 
   // Remove handlers inline perigosos (ex: onload=, onclick=, onerror=)
   str = str.replace(/on\w+\s*=\s*(["'][^"']*["']|[^\s>]+)/gi, '');

@@ -21,6 +21,7 @@ export function WhatsAppLeadModal({ open, onClose, source = 'whatsapp-fab' }: Wh
   const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [submitted, setSubmitted] = useState(false);
   const [website, setWebsite] = useState('');
   const [modalOpenTime, setModalOpenTime] = useState<number>(() => Date.now());
 
