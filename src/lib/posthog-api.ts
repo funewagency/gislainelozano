@@ -1,6 +1,7 @@
-const POSTHOG_HOST = process.env.POSTHOG_HOST || process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://us.posthog.com';
-const POSTHOG_API_KEY = process.env.POSTHOG_API_KEY || process.env.NEXT_PUBLIC_POSTHOG_API_KEY;
-const POSTHOG_PROJECT_ID = process.env.POSTHOG_PROJECT_ID || process.env.NEXT_PUBLIC_POSTHOG_PROJECT_ID;
+const rawHost = (process.env.POSTHOG_HOST || process.env.NEXT_PUBLIC_POSTHOG_HOST || '').trim();
+const POSTHOG_HOST = rawHost.length > 0 ? rawHost : 'https://us.posthog.com';
+const POSTHOG_API_KEY = (process.env.POSTHOG_API_KEY || process.env.NEXT_PUBLIC_POSTHOG_API_KEY || '').trim() || undefined;
+const POSTHOG_PROJECT_ID = (process.env.POSTHOG_PROJECT_ID || process.env.NEXT_PUBLIC_POSTHOG_PROJECT_ID || '').trim() || undefined;
 
 interface QueryResult {
   columns: string[];

@@ -23,7 +23,17 @@ const jakarta = Plus_Jakarta_Sans({
   display: "swap",
 });
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://gislainelozano.com.br';
+function getValidSiteUrl(): string {
+  const envUrl = (process.env.NEXT_PUBLIC_SITE_URL || '').trim();
+  if (!envUrl) return 'https://gislainelozano.com.br';
+  try {
+    return new URL(envUrl).origin;
+  } catch {
+    return 'https://gislainelozano.com.br';
+  }
+}
+
+const SITE_URL = getValidSiteUrl();
 
 export const metadata: Metadata = {
   title: "Gislaine Lozano | Mentoria Estratégica de Vendas & Posicionamento",

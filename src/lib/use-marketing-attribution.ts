@@ -30,10 +30,10 @@ function parseUtmParams(): MarketingAttribution {
 function getReferrerSource(): string | null {
   if (typeof document === 'undefined') return null;
   const referrer = document.referrer;
-  if (!referrer) return 'direct';
+  if (!referrer || typeof referrer !== 'string' || referrer.trim() === '') return 'direct';
 
   try {
-    const url = new URL(referrer);
+    const url = new URL(referrer, 'https://gislainelozano.com.br');
     const hostname = url.hostname;
 
     if (hostname.includes('google')) return 'google';

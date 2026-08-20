@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { useEffect, useState, useCallback } from 'react';
 import { C } from '@/components/gislaine/constants';
 import { OnboardingWizard } from '@/components/admin/onboarding-wizard';

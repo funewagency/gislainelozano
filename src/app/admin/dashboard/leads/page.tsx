@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { C } from '@/components/gislaine/constants';
 import { LeadsTable } from '@/components/admin/leads-table';

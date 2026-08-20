@@ -1,18 +1,20 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { useEffect } from 'react';
 import { setPreviewData } from '@/lib/cms-preview-state';
 import type { GlobalConfig } from '@/lib/cms-types';
-import dynamic from 'next/dynamic';
+import nextDynamic from 'next/dynamic';
 
-const HeroSection = dynamic(() => import('@/components/gislaine/hero').then(m => ({ default: m.HeroSection })), { ssr: false });
-const PainSection = dynamic(() => import('@/components/gislaine/pain-points').then(m => ({ default: m.PainSection })), { ssr: false });
-const BioSection = dynamic(() => import('@/components/gislaine/bio').then(m => ({ default: m.BioSection })), { ssr: false });
-const PosicionamentoSection = dynamic(() => import('@/components/gislaine/posicionamento').then(m => ({ default: m.PosicionamentoSection })), { ssr: false });
-const ServicesSection = dynamic(() => import('@/components/gislaine/services').then(m => ({ default: m.ServicesSection })), { ssr: false });
-const ResultsSection = dynamic(() => import('@/components/gislaine/results').then(m => ({ default: m.ResultsSection })), { ssr: false });
-const FaqSection = dynamic(() => import('@/components/gislaine/faq').then(m => ({ default: m.FaqSection })), { ssr: false });
-const ContactSection = dynamic(() => import('@/components/gislaine/contact').then(m => ({ default: m.ContactSection })), { ssr: false });
+const HeroSection = nextDynamic(() => import('@/components/gislaine/hero').then(m => ({ default: m.HeroSection })), { ssr: false });
+const PainSection = nextDynamic(() => import('@/components/gislaine/pain-points').then(m => ({ default: m.PainSection })), { ssr: false });
+const BioSection = nextDynamic(() => import('@/components/gislaine/bio').then(m => ({ default: m.BioSection })), { ssr: false });
+const PosicionamentoSection = nextDynamic(() => import('@/components/gislaine/posicionamento').then(m => ({ default: m.PosicionamentoSection })), { ssr: false });
+const ServicesSection = nextDynamic(() => import('@/components/gislaine/services').then(m => ({ default: m.ServicesSection })), { ssr: false });
+const ResultsSection = nextDynamic(() => import('@/components/gislaine/results').then(m => ({ default: m.ResultsSection })), { ssr: false });
+const FaqSection = nextDynamic(() => import('@/components/gislaine/faq').then(m => ({ default: m.FaqSection })), { ssr: false });
+const ContactSection = nextDynamic(() => import('@/components/gislaine/contact').then(m => ({ default: m.ContactSection })), { ssr: false });
 
 export default function AdminPreviewPage() {
   useEffect(() => {
