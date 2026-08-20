@@ -6,9 +6,10 @@ import { writeFile, mkdir } from 'fs/promises';
 import path from 'path';
 import { unauthorized, serverError, badRequest, rateLimited } from '@/lib/api-utils';
 import { mutationLimiter } from '@/lib/rate-limit';
+import { validateImageMagicBytes, sanitizeSafeFilename } from '@/lib/file-security';
 
 const UPLOAD_DIR = path.join(process.cwd(), 'public', 'uploads');
-const MAX_SIZE = 10 * 1024 * 1024;
+const MAX_SIZE = 10 * 1024 * 1024; // 10MB
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/avif', 'image/gif'];
 
 export async function POST(request: NextRequest) {
@@ -41,38 +42,33 @@ export async function POST(request: NextRequest) {
 
     const buffer = Buffer.from(await file.arrayBuffer());
 
-    const sanitizedName = file.name
-      .replace(/[^a-zA-Z0-9._-]/g, '_')
-      .replace(/\.[^.]+$/, '')
-      .slice(0, 60);
+    // Validação estrita de Magic Bytes (assinatura binária real do arquivo)
+    if (!validateImageMagicBytes(buffer, file.type)) {
+      return badRequest('O conteúdo do arquivo não corresponde a uma imagem válida ou segura.');
+    }
 
+    const safeBaseName = sanitizeSafeFilename(file.name).replace(/\.[^.]+$/, '');
     const timestamp = Date.now();
-    const ext = file.type === 'image/jpeg'
-      ? 'jpg'
-      : file.type === 'image/png'
-        ? 'png'
-        : file.type === 'image/gif'
-          ? 'gif'
-          : 'webp';
-    const filename = `${sanitizedName}-${timestamp}.${ext}`;
-    const filepath = path.join(UPLOAD_DIR, filename);
+    const isGif = file.type === 'image/gif';
+    const finalExt = isGif ? 'gif' : 'webp';
+    const finalFilename = `${safeBaseName}-${timestamp}.${finalExt}`;
+    const filepath = path.join(UPLOAD_DIR, finalFilename);
 
     await mkdir(UPLOAD_DIR, { recursive: true });
 
-    if (file.type === 'image/gif') {
+    if (isGif) {
       await writeFile(filepath, buffer);
     } else {
+      // Re-encoda através do Sharp para neutralizar EXIF malicioso ou payloads embutidos
       await sharp(buffer)
         .resize(1920, 1080, { fit: 'inside', withoutEnlargement: true })
         .webp({ quality: 85 })
-        .toFile(filepath.replace(/\.(jpg|png)$/, '.webp'));
+        .toFile(filepath);
     }
 
-    const finalFilename = file.type === 'image/gif' ? filename : filename.replace(/\.(jpg|png)$/, '.webp');
     const url = `/uploads/${finalFilename}`;
-
     return NextResponse.json({ url, filename: finalFilename });
   } catch (error) {
-    return serverError(error, 'Falha no upload');
+    return serverError(error, 'Falha no processamento seguro do upload');
   }
 }

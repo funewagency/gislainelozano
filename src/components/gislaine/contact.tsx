@@ -23,7 +23,9 @@ export function ContactSection() {
     email: "",
     phone: "",
     message: "",
+    website: "", // Honeypot antispam
   });
+  const [formInitTime] = useState<number>(() => Date.now());
 
   if (isInView) {
     trackSectionView("contato");
@@ -37,7 +39,10 @@ export function ContactSection() {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          _ts: formInitTime,
+        }),
       });
 
       if (res.ok) {
@@ -245,6 +250,18 @@ export function ContactSection() {
                   >
                     Agende sua sessão
                   </h3>
+
+                  {/* Honeypot invisível para captura de robôs / spam bots */}
+                  <div style={{ display: "none", opacity: 0, position: "absolute", left: "-9999px" }} aria-hidden="true">
+                    <input
+                      type="text"
+                      name="website"
+                      value={formData.website}
+                      onChange={handleChange}
+                      tabIndex={-1}
+                      autoComplete="off"
+                    />
+                  </div>
 
                   <div>
                     <label

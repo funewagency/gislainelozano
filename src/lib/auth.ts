@@ -7,9 +7,15 @@ function hashPassword(password: string): string {
 }
 
 function timingSafeEqual(a: string, b: string): boolean {
-  const bufA = Buffer.from(a);
-  const bufB = Buffer.from(b);
-  if (bufA.length !== bufB.length) return false;
+  const bufA = Buffer.from(a, 'utf-8');
+  const bufB = Buffer.from(b, 'utf-8');
+  
+  // Para prevenir timing attack no tamanho do buffer, comparamos com buffer dummy
+  if (bufA.length !== bufB.length) {
+    const dummy = Buffer.alloc(bufB.length);
+    crypto.timingSafeEqual(dummy, bufB);
+    return false;
+  }
   return crypto.timingSafeEqual(bufA, bufB);
 }
 
@@ -30,18 +36,24 @@ export const authOptions: NextAuthOptions = {
         const adminHash = process.env.ADMIN_PASSWORD_HASH?.trim();
 
         if (!adminUser || !adminHash) {
+          console.error('[Auth Security] ADMIN_USERNAME ou ADMIN_PASSWORD_HASH não configurados.');
           return null;
         }
 
-        const inputUser = credentials.username.trim();
-        const inputPass = credentials.password;
+        const inputUser = String(credentials.username).trim();
+        const inputPass = String(credentials.password);
+
+        if (inputUser.length > 100 || inputPass.length > 200) {
+          return null;
+        }
 
         const passwordHash = hashPassword(inputPass);
-        const isValid =
-          inputUser.toLowerCase() === adminUser.toLowerCase() &&
-          timingSafeEqual(passwordHash, adminHash);
+        const isUserMatch = inputUser.toLowerCase() === adminUser.toLowerCase();
+        const isPassMatch = timingSafeEqual(passwordHash, adminHash);
 
-        if (!isValid) return null;
+        if (!isUserMatch || !isPassMatch) {
+          return null;
+        }
 
         return {
           id: '1',

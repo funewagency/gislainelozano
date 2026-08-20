@@ -32,6 +32,11 @@ vi.mock('@/lib/rate-limit', () => ({
   shouldRateLimit: vi.fn().mockReturnValue(false),
 }));
 
+vi.mock('next-auth', () => ({
+  getServerSession: vi.fn(),
+}));
+
+import { getServerSession } from 'next-auth';
 import { POST } from './route';
 
 describe('POST /api/generate-images', () => {
@@ -39,7 +44,15 @@ describe('POST /api/generate-images', () => {
     vi.clearAllMocks();
   });
 
-  it('returns results array with all images', async () => {
+  it('rejects unauthorized request with 401', async () => {
+    vi.mocked(getServerSession).mockResolvedValueOnce(null);
+    const req = new NextRequest('http://localhost:3000/api/generate-images', { method: 'POST' });
+    const res = await POST(req);
+    expect(res.status).toBe(401);
+  });
+
+  it('returns results array with all images when authenticated', async () => {
+    vi.mocked(getServerSession).mockResolvedValueOnce({ user: { name: 'admin', role: 'admin' } });
     const req = new NextRequest('http://localhost:3000/api/generate-images', { method: 'POST' });
     const res = await POST(req);
     expect(res.status).toBe(200);

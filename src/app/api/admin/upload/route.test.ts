@@ -119,7 +119,8 @@ describe('POST /api/admin/upload', () => {
 
     const { POST } = await import('./route')
     const formData = new FormData()
-    const file = new File(['fakejpeg'], 'test.jpg', { type: 'image/jpeg' })
+    const validJpegBytes = new Uint8Array([0xff, 0xd8, 0xff, 0xe0, 0x00, 0x10, 0x4a, 0x46, 0x49, 0x46, 0x00, 0x01])
+    const file = new File([validJpegBytes], 'test.jpg', { type: 'image/jpeg' })
     formData.append('file', file)
     const request = new Request('http://localhost/api/admin/upload', {
       method: 'POST',
@@ -137,7 +138,8 @@ describe('POST /api/admin/upload', () => {
 
     const { POST } = await import('./route')
     const formData = new FormData()
-    const file = new File(['fakepng'], 'test.png', { type: 'image/png' })
+    const validPngBytes = new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00, 0x00, 0x00, 0x0d])
+    const file = new File([validPngBytes], 'test.png', { type: 'image/png' })
     formData.append('file', file)
     const request = new Request('http://localhost/api/admin/upload', {
       method: 'POST',
@@ -154,7 +156,8 @@ describe('POST /api/admin/upload', () => {
 
     const { POST } = await import('./route')
     const formData = new FormData()
-    const file = new File(['GIF89a'], 'anim.gif', { type: 'image/gif' })
+    const validGifBytes = new Uint8Array([0x47, 0x49, 0x46, 0x38, 0x39, 0x61, 0x01, 0x00, 0x01, 0x00, 0x80, 0x00])
+    const file = new File([validGifBytes], 'anim.gif', { type: 'image/gif' })
     formData.append('file', file)
     const request = new Request('http://localhost/api/admin/upload', {
       method: 'POST',
@@ -171,7 +174,8 @@ describe('POST /api/admin/upload', () => {
 
     const { POST } = await import('./route')
     const formData = new FormData()
-    const file = new File(['x'], 'meu arquivo (1)!.jpg', { type: 'image/jpeg' })
+    const validJpegBytes = new Uint8Array([0xff, 0xd8, 0xff, 0xe0, 0x00, 0x10, 0x4a, 0x46, 0x49, 0x46, 0x00, 0x01])
+    const file = new File([validJpegBytes], 'meu arquivo (1)!.jpg', { type: 'image/jpeg' })
     formData.append('file', file)
     const request = new Request('http://localhost/api/admin/upload', {
       method: 'POST',

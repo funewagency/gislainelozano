@@ -4,6 +4,7 @@ import { trackServerSide } from '@/lib/analytics-server';
 import * as Sentry from '@sentry/nextjs';
 import { isValidPhone } from '@brazilian-utils/brazilian-utils';
 import { contactLimiter, shouldRateLimit } from '@/lib/rate-limit';
+import { sanitizeInput, sanitizeEmail, sanitizePhone } from '@/lib/sanitize';
 
 export async function POST(request: NextRequest) {
   try {
@@ -22,10 +23,38 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const rawName = String(body.name ?? '').trim();
-    const rawEmail = String(body.email ?? '').trim().toLowerCase();
-    const rawPhone = String(body.phone ?? '').replace(/\D/g, '');
-    const { message, source, medium, campaign } = body;
+
+    // 1. Proteção contra Bots: Honeypot (campo armadilha invisível para humanos)
+    const honeypot = body.website || body.company_url || body._hp_field;
+    if (honeypot) {
+      // Retorna sucesso falso sem executar nada para desarmar o bot sem alertá-lo
+      return NextResponse.json(
+        { success: true, message: 'Mensagem recebida com sucesso!' },
+        { status: 200 }
+      );
+    }
+
+    // 2. Proteção contra Bots: Time-to-Submit (envio rápido demais em < 1.5s)
+    const formTimestamp = body._ts ? Number(body._ts) : null;
+    if (formTimestamp && !isNaN(formTimestamp)) {
+      const timeElapsed = Date.now() - formTimestamp;
+      if (timeElapsed < 1500 && timeElapsed > 0) {
+        // Envio instantâneo característico de script automatizado
+        return NextResponse.json(
+          { success: true, message: 'Mensagem recebida com sucesso!' },
+          { status: 200 }
+        );
+      }
+    }
+
+    // 3. Sanitização rigorosa das entradas (Anti-XSS & Anti-Injection)
+    const rawName = sanitizeInput(body.name, 100);
+    const rawEmail = sanitizeEmail(body.email);
+    const rawPhone = sanitizePhone(body.phone);
+    const message = body.message ? sanitizeInput(body.message, 1000) : null;
+    const source = body.source ? sanitizeInput(body.source, 50) : null;
+    const medium = body.medium ? sanitizeInput(body.medium, 50) : null;
+    const campaign = body.campaign ? sanitizeInput(body.campaign, 50) : null;
 
     if (!rawName || !rawEmail || !rawPhone) {
       return NextResponse.json(
@@ -34,7 +63,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailRegex.test(rawEmail)) {
       return NextResponse.json(
         { error: 'E-mail inválido.' },
@@ -60,10 +89,10 @@ export async function POST(request: NextRequest) {
           name: rawName,
           email: rawEmail,
           phone: rawPhone,
-          message: message ? String(message).trim() : null,
-          source: source ? String(source).trim() : null,
-          medium: medium ? String(medium).trim() : null,
-          campaign: campaign ? String(campaign).trim() : null,
+          message: message || null,
+          source: source || null,
+          medium: medium || null,
+          campaign: campaign || null,
         },
       }),
       fetch(`${cmsUrl}/api/v1/${tenantSlug}/leads`, {

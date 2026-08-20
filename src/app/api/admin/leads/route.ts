@@ -4,6 +4,7 @@ import { authOptions } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { unauthorized, serverError, rateLimited, badRequest } from '@/lib/api-utils';
 import { readLimiter, mutationLimiter, shouldRateLimit } from '@/lib/rate-limit';
+import { sanitizeInput, isValidId } from '@/lib/sanitize';
 
 export async function GET(request: NextRequest) {
   try {
@@ -20,8 +21,8 @@ export async function GET(request: NextRequest) {
     const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
     const limit = Math.min(100, Math.max(1, parseInt(searchParams.get('limit') || '50', 10)));
     const skip = (page - 1) * limit;
-    const search = searchParams.get('search') || '';
-    const source = searchParams.get('source') || '';
+    const search = sanitizeInput(searchParams.get('search') || '', 100);
+    const source = sanitizeInput(searchParams.get('source') || '', 50);
     const statsOnly = searchParams.get('stats') === 'true';
 
     if (page > 500) {
@@ -113,13 +114,17 @@ export async function DELETE(request: NextRequest) {
       if (!Array.isArray(parsed.ids) || parsed.ids.length === 0) {
         return badRequest('É necessário informar "ids" (array de strings).');
       }
-      ids = parsed.ids.map((v) => String(v)).filter(Boolean);
+      ids = parsed.ids.map((v) => String(v).trim()).filter(isValidId);
       if (ids.length === 0) {
-        return badRequest('Nenhum id válido informado.');
+        return badRequest('Nenhum id com formato válido informado.');
       }
       if (ids.length > 500) {
         return badRequest('Máximo de 500 leads por operação.');
       }
+    }
+
+    if (queryId && !isValidId(queryId)) {
+      return badRequest('ID com formato inválido informado.');
     }
 
     const exists = await db.contact.count({ where: { id: { in: ids } } });

@@ -21,7 +21,8 @@ export function WhatsAppLeadModal({ open, onClose, source = 'whatsapp-fab' }: Wh
   const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [submitted, setSubmitted] = useState(false);
+  const [website, setWebsite] = useState('');
+  const [modalOpenTime, setModalOpenTime] = useState<number>(() => Date.now());
 
   useEffect(() => {
     if (open) {
@@ -31,6 +32,8 @@ export function WhatsAppLeadModal({ open, onClose, source = 'whatsapp-fab' }: Wh
       if (saved.phone) setPhone(saved.phone);
       setError('');
       setSubmitted(false);
+      setWebsite('');
+      setModalOpenTime(Date.now());
       track('contact_form_started', { source });
     }
   }, [open, source]);
@@ -54,6 +57,8 @@ export function WhatsAppLeadModal({ open, onClose, source = 'whatsapp-fab' }: Wh
           source: attribution.source || source,
           medium: attribution.medium,
           campaign: attribution.campaign,
+          website,
+          _ts: modalOpenTime,
         }),
       });
 
@@ -141,6 +146,18 @@ export function WhatsAppLeadModal({ open, onClose, source = 'whatsapp-fab' }: Wh
             </p>
 
             <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Honeypot invisível para captura de bots */}
+              <div style={{ display: 'none', opacity: 0, position: 'absolute', left: '-9999px' }} aria-hidden="true">
+                <input
+                  type="text"
+                  name="website"
+                  value={website}
+                  onChange={(e) => setWebsite(e.target.value)}
+                  tabIndex={-1}
+                  autoComplete="off"
+                />
+              </div>
+
               <div>
                 <label htmlFor="lead-name" className="block text-xs font-semibold mb-1 tracking-wider uppercase" style={{ fontFamily: 'var(--font-jakarta)', color: C.white }}>
                   Nome
