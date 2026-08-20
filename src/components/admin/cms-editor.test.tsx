@@ -101,7 +101,7 @@ describe('CmsEditor', () => {
 
   it('shows section tabs', () => {
     render(<CmsEditor />);
-    expect(screen.getByText('Seções')).toBeDefined();
-    expect(screen.getByText('Histórico')).toBeDefined();
+    expect(screen.getByRole('tab', { name: /Conteúdo/i })).toBeDefined();
+    expect(screen.getByRole('tab', { name: /Histórico/i })).toBeDefined();
   });
 });

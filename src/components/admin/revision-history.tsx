@@ -153,7 +153,7 @@ export function RevisionHistory() {
                           style={{ backgroundColor: C.surfaceAlt, color: C.muted }}
                         >
                           <User size={8} />
-                          {rev.createdBy}
+                          por {rev.createdBy}
                         </span>
                       )}
                     </div>

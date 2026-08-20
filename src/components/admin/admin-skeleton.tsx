@@ -33,22 +33,19 @@ function ShimmerBlock({ className = '', style = {} }: { className?: string; styl
 
 export function KpiSkeleton() {
   return (
-    <>
-      <ShimmerStyle />
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <div
-            key={i}
-            className="p-5 rounded-2xl"
-            style={{ backgroundColor: C.white, border: `1px solid ${C.border}`, boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}
-          >
-            <ShimmerBlock className="h-3 w-16 mb-3" />
-            <ShimmerBlock className="h-8 w-24 mb-2" />
-            <ShimmerBlock className="h-3 w-20" />
-          </div>
-        ))}
-      </div>
-    </>
+    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+      {Array.from({ length: 4 }).map((_, i) => (
+        <div
+          key={i}
+          className="p-5 rounded-2xl animate-pulse"
+          style={{ backgroundColor: C.white, border: `1px solid ${C.border}`, boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}
+        >
+          <ShimmerBlock className="h-3 w-16 mb-3" />
+          <ShimmerBlock className="h-8 w-24 mb-2" />
+          <ShimmerBlock className="h-3 w-20" />
+        </div>
+      ))}
+    </div>
   );
 }
 
@@ -56,16 +53,13 @@ export function KpiSkeleton() {
 
 export function ChartSkeleton({ height = 250 }: { height?: number }) {
   return (
-    <>
-      <ShimmerStyle />
-      <div
-        className="p-5 rounded-2xl"
-        style={{ backgroundColor: C.white, border: `1px solid ${C.border}`, boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}
-      >
-        <ShimmerBlock className="h-4 w-40 mb-5" />
-        <ShimmerBlock style={{ height }} />
-      </div>
-    </>
+    <div
+      className="p-4 rounded-2xl animate-pulse"
+      style={{ backgroundColor: C.white, border: `1px solid ${C.border}`, boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}
+    >
+      <ShimmerBlock className="h-4 w-40 mb-5 animate-pulse" />
+      <ShimmerBlock className="animate-pulse" style={{ height }} />
+    </div>
   );
 }
 
@@ -73,37 +67,36 @@ export function ChartSkeleton({ height = 250 }: { height?: number }) {
 
 export function TableSkeleton({ rows = 5 }: { rows?: number }) {
   return (
-    <>
-      <ShimmerStyle />
-      <div
-        className="overflow-hidden rounded-2xl"
-        style={{ border: `1px solid ${C.border}`, backgroundColor: C.white, boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}
-      >
-        <div
-          className="grid grid-cols-5 px-5 py-3"
-          style={{ borderBottom: `1.5px solid ${C.border}`, backgroundColor: C.surface }}
-        >
-          {Array.from({ length: 5 }).map((_, i) => (
-            <ShimmerBlock key={i} className="h-3 w-16" />
-          ))}
-        </div>
-        {Array.from({ length: rows }).map((_, row) => (
-          <div
-            key={row}
-            className="grid grid-cols-5 items-center px-5 py-4"
-            style={{ borderBottom: `1px solid ${C.border}` }}
-          >
-            {Array.from({ length: 5 }).map((_, col) => (
-              <ShimmerBlock
-                key={col}
-                className="h-4"
-                style={{ width: col === 0 ? '60%' : col === 3 ? '40%' : '80%' }}
-              />
+    <div
+      className="overflow-hidden rounded-2xl animate-pulse"
+      style={{ border: `1px solid ${C.border}`, backgroundColor: C.white, boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}
+    >
+      <table className="w-full text-left border-collapse">
+        <thead style={{ backgroundColor: C.surface, borderBottom: `1.5px solid ${C.border}` }}>
+          <tr>
+            {Array.from({ length: 5 }).map((_, i) => (
+              <th key={i} className="px-5 py-3.5">
+                <ShimmerBlock className="h-3 w-16 animate-pulse" />
+              </th>
             ))}
-          </div>
-        ))}
-      </div>
-    </>
+          </tr>
+        </thead>
+        <tbody className="divide-y" style={{ borderColor: C.border }}>
+          {Array.from({ length: rows }).map((_, row) => (
+            <tr key={row} className="px-5 py-4">
+              {Array.from({ length: 5 }).map((_, col) => (
+                <td key={col} className="px-5 py-4">
+                  <ShimmerBlock
+                    className="h-4 animate-pulse"
+                    style={{ width: col === 0 ? '60%' : col === 3 ? '40%' : '80%' }}
+                  />
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
 
