@@ -8,7 +8,7 @@ Passo-a-passo completo para rodar o repositório **localmente** e fazer o **depl
 
 | Item | Detalhe |
 |---|---|
-| **Repositório** | `https://github.com/marcusgkaefer/gislaine-lozano.git` |
+| **Repositório** | `https://github.com/funewagency/gislainelozano.git` |
 | **Framework** | Next.js 16 (App Router, `output: "standalone"`) |
 | **Linguagem** | TypeScript (modo estrito) |
 | **Estilo** | Tailwind CSS 4 + shadcn/ui |
@@ -45,7 +45,7 @@ Instale antes de começar:
 ### 3.1 Clonar e instalar dependências
 
 ```bash
-git clone https://github.com/marcusgkaefer/gislaine-lozano.git
+git clone https://github.com/funewagency/gislainelozano.git
 cd gislaine-lozano
 
 bun install
