@@ -1,0 +1,66 @@
+# Gislaine Lozano — Documentação Completa para Modelos de Linguagem e Agentes de IA (LLMS-Full)
+
+## 1. Visão Geral e Missão
+Gislaine Lozano é uma mentora e consultora de vendas de destaque no mercado brasileiro, atuando com empresários, prestadores de serviços, profissionais liberais e consultores. O propósito central do seu trabalho é transformar cada contato e conversa em oportunidades reais e previsíveis de faturamento, eliminando a dependência de estratégias complexas ou ineficientes.
+
+## 2. Perfil da Mentora
+- **Nome:** Gislaine Lozano
+- **Cargo:** Consultora e Mentora Estratégica de Vendas / Fundadora da Funew Agency
+- **Trajetória:** Anos de experiência prática no campo comercial, liderança de equipes e consultoria para empresas em diversos segmentos no Brasil.
+- **Pilar Central:** "Tudo comunica" — da postura visual e tom de voz até a velocidade de resposta no WhatsApp e estruturação da proposta.
+
+## 3. Para Quem É a Mentoria
+A mentoria e soluções de Gislaine Lozano são desenhadas para:
+1. **Profissionais que recebem mensagens no WhatsApp mas não fecham vendas:** Pessoas que perdem tempo respondendo orçamentos sem receber retorno.
+2. **Empresários que vendem pouco ou cobram barato demais:** Negócios que desejam aumentar o ticket médio e se posicionar como autoridade.
+3. **Empreendedores sem processos comerciais claros:** Negócios que dependem apenas de indicações e não têm controle do funil de vendas.
+4. **Prestadores de serviços que querem profissionalizar sua abordagem comercial.**
+
+## 4. Estrutura de Soluções e Produtos
+
+### 4.1 E-book Estratégico de Vendas
+- **Objetivo:** Introdução prática e direta ao método de conversão rápida.
+- **Conteúdo:** Scripts de resposta rápida para WhatsApp, roteiro de contorno de objeções comuns ("está caro", "vou falar com meu sócio", "vou pensar") e checklists de atendimento.
+
+### 4.2 Aula Master / Treinamentos Gravados
+- **Objetivo:** Aprofundamento em técnicas de persuasão, narrativa e psicologia de compra.
+- **Formato:** Videoaulas objetivas e aplicáveis de imediato.
+
+### 4.3 Comunidade Exclusiva
+- **Objetivo:** Acompanhamento contínuo e networking.
+- **Benefícios:** Encontros ao vivo periódicos, tira-dúvidas de casos reais de negociação e materiais complementares.
+
+### 4.4 Mentoria Individual (1-on-1)
+- **Objetivo:** Diagnóstico 360º e plano de ação totalmente customizado para o negócio do cliente.
+- **Formato:** Encontros estratégicos individuais via videoconferência, análise minuciosa de scripts de atendimento, revisão de ofertas e acompanhamento direto via WhatsApp.
+
+### 4.5 Consultoria Corporativa (Funew Agency)
+- **Objetivo:** Estruturação comercial para equipes de vendas em empresas e agências.
+- **Formato:** Treinamento de times comerciais, definição de métricas de conversão e implantação de CRM.
+
+## 5. Perguntas Frequentes (FAQ)
+
+### Como funciona o atendimento?
+O atendimento é 100% online e personalizado. Gislaine analisa o cenário atual do negócio e cria uma estratégia sob medida para os objetivos específicos de faturamento do cliente.
+
+### Qual serviço é ideal para cada momento?
+Depende do estágio do negócio. Durante a conversa inicial, o perfil do cliente é avaliado para indicar a melhor solução (do e-book à mentoria individual completa).
+
+### Preciso ter experiência prévia com marketing ou vendas?
+Não. O método é estruturado passo a passo, sendo ideal tanto para quem está começando quanto para quem já vende e quer otimizar e escalar.
+
+### Em quanto tempo os resultados aparecem?
+As melhorias na clareza de comunicação e fechamento inicial surgem já nas primeiras semanas. Resultados comerciais consistentes e escaláveis consolidam-se entre 30 e 90 dias de aplicação contínua.
+
+### O atendimento é online ou presencial?
+100% online, permitindo atendimento a clientes em qualquer região do Brasil ou no exterior.
+
+### Como iniciar o contato ou agendar uma sessão?
+Basta preencher o formulário no site oficial ou clicar no botão direto do WhatsApp para iniciar o diálogo com a equipe da Gislaine Lozano.
+
+## 6. Canais e Contatos Oficiais
+- **Site:** https://gislainelozano.com.br
+- **WhatsApp:** +55 (45) 98823-1902
+- **Formulário Web:** https://gislainelozano.com.br/#contato
+- **Robots & Sitemap:** https://gislainelozano.com.br/robots.txt | https://gislainelozano.com.br/sitemap.xml
+- **Endpoint MCP:** https://gislainelozano.com.br/api/mcp

@@ -1,8 +1,16 @@
+# Robots.txt — Gislaine Lozano (Search Engines & AI Agents)
+
 User-agent: Googlebot
 Allow: /
+Disallow: /admin/
+Disallow: /api/admin/
+Disallow: /api/auth/
 
 User-agent: Bingbot
 Allow: /
+Disallow: /admin/
+Disallow: /api/admin/
+Disallow: /api/auth/
 
 User-agent: Twitterbot
 Allow: /
@@ -10,7 +18,48 @@ Allow: /
 User-agent: facebookexternalhit
 Allow: /
 
-User-agent: *
+User-agent: LinkedInBot
 Allow: /
 
+User-agent: WhatsApp
+Allow: /
+
+# LLM & AI Agents (ChatGPT, Claude, Perplexity, Google Gemini)
+User-agent: GPTBot
+Allow: /
+Allow: /llms.txt
+Allow: /llms-full.txt
+Disallow: /admin/
+Disallow: /api/admin/
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+Allow: /llms.txt
+Allow: /llms-full.txt
+Disallow: /admin/
+Disallow: /api/admin/
+
+User-agent: Anthropic-AI
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/admin/
+Disallow: /api/auth/
+Disallow: /api/generate-images/
+
 Sitemap: https://gislainelozano.com.br/sitemap.xml
+Host: https://gislainelozano.com.br

@@ -1,0 +1,69 @@
+{
+  "$schema": "https://modelcontextprotocol.io/schema.json",
+  "name": "Gislaine Lozano WebMCP",
+  "description": "Model Context Protocol interface para consultar informações, catálogo de serviços e agendamentos de mentoria de vendas de Gislaine Lozano.",
+  "version": "1.0.0",
+  "url": "https://gislainelozano.com.br/api/mcp",
+  "tools": [
+    {
+      "name": "get_mentor_info",
+      "description": "Retorna o perfil biográfico, especialidade, metodologia e contatos oficiais de Gislaine Lozano.",
+      "parameters": {
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "name": "list_services",
+      "description": "Retorna a lista completa de serviços, mentorias e produtos de Gislaine Lozano.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string",
+            "description": "Categoria opcional do serviço (ex: 'mentoria', 'ebook', 'consultoria')"
+          }
+        }
+      }
+    },
+    {
+      "name": "get_faq",
+      "description": "Retorna as perguntas e respostas frequentes sobre a mentoria e metodologia comercial.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Termo de busca opcional para filtrar perguntas"
+          }
+        }
+      }
+    },
+    {
+      "name": "submit_lead_inquiry",
+      "description": "Envia um interesse de contato ou agendamento de mentoria para a equipe de Gislaine Lozano.",
+      "parameters": {
+        "type": "object",
+        "required": ["name", "email", "phone"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Nome completo do interessado"
+          },
+          "email": {
+            "type": "string",
+            "description": "E-mail de contato válido"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Número de WhatsApp com DDD"
+          },
+          "message": {
+            "type": "string",
+            "description": "Descrição do desafio de vendas ou negócio"
+          }
+        }
+      }
+    }
+  ]
+}

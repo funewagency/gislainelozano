@@ -26,9 +26,9 @@ const jakarta = Plus_Jakarta_Sans({
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://gislainelozano.com.br';
 
 export const metadata: Metadata = {
-  title: "Gislaine Lozano | Mentoria Estratégica de Vendas",
+  title: "Gislaine Lozano | Mentoria Estratégica de Vendas & Posicionamento",
   description:
-    "Transforme cada conversa em venda. Aprenda o Método de Vendas que gera resultados rápidos para quem não tem tempo a perder.",
+    "Transforme cada conversa no WhatsApp em venda. Método validado de vendas consultivas e posicionamento estratégico para empreendedores e prestadores de serviços.",
   keywords: [
     "mentoria vendas",
     "mentoria estratégica",
@@ -40,10 +40,14 @@ export const metadata: Metadata = {
     "posicionamento digital",
     "tudo comunica",
     "funew agency",
+    "mentoria de negócios",
+    "fechamento de vendas",
+    "vendas online Brasil",
   ],
   authors: [{ name: "Gislaine Lozano", url: SITE_URL }],
   creator: "Gislaine Lozano",
-  publisher: "Gislaine Lozano",
+  publisher: "Funew Agency",
+  category: "Business & Career Consulting",
   metadataBase: new URL(SITE_URL),
   alternates: {
     canonical: "/",
@@ -55,7 +59,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Gislaine Lozano | Mentoria Estratégica de Vendas",
     description:
-      "Transforme cada conversa em venda com o método validado de Gislaine Lozano. Estratégia, posicionamento e vendas para quem quer resultados reais.",
+      "Transforme cada conversa em venda com o método validado de Gislaine Lozano. Estratégia, posicionamento e conversão de alta performance.",
     type: "website",
     locale: "pt_BR",
     url: SITE_URL,
@@ -65,7 +69,8 @@ export const metadata: Metadata = {
         url: "/images/gislaine/gislaine-new-hero.webp",
         width: 1920,
         height: 1080,
-        alt: "Gislaine Lozano, Mentoria Estratégica de Vendas",
+        type: "image/webp",
+        alt: "Gislaine Lozano — Mentoria Estratégica de Vendas",
       },
     ],
   },
@@ -73,8 +78,9 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Gislaine Lozano | Mentoria Estratégica de Vendas",
     description:
-      "Transforme cada conversa em venda. Método validado de vendas para empreendedores.",
+      "Transforme conversas em vendas reais. Método validado de vendas para empreendedores.",
     images: ["/images/gislaine/gislaine-new-hero.webp"],
+    creator: "@gislainelozano",
   },
   robots: {
     index: true,
@@ -86,6 +92,14 @@ export const metadata: Metadata = {
       "max-image-preview": "large",
       "max-snippet": -1,
     },
+  },
+  other: {
+    "geo.region": "BR-PR",
+    "geo.placename": "Cascavel, Paraná, Brasil",
+    "geo.position": "-24.9578;-53.4595",
+    "ICBM": "-24.9578, -53.4595",
+    "distribution": "global",
+    "rating": "general",
   },
   verification: {
     google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || '',
@@ -100,29 +114,113 @@ function StructuredData() {
         "@type": "Person",
         "@id": `${SITE_URL}/#person`,
         name: "Gislaine Lozano",
-        jobTitle: "Consultora Estratégica de Vendas",
-        description: "Estrategista de vendas e comunicação, CEO da Funew Agency.",
-        sameAs: [],
+        jobTitle: "Mentora e Consultora Estratégica de Vendas",
+        description: "Estrategista de vendas, mentora de negócios e CEO da Funew Agency.",
+        url: SITE_URL,
+        image: `${SITE_URL}/images/gislaine/gislaine-portrait.png`,
+        worksFor: {
+          "@type": "Organization",
+          name: "Funew Agency",
+          url: SITE_URL,
+        },
+        knowsAbout: [
+          "Mentoria de Vendas",
+          "Vendas Consultivas",
+          "Vendas via WhatsApp",
+          "Estratégia Comercial",
+          "Posicionamento de Mercado",
+          "Negociação e Fechamento",
+        ],
+        sameAs: [
+          "https://instagram.com/gislainelozano",
+          "https://gislainelozano.com.br",
+        ],
+      },
+      {
+        "@type": "Organization",
+        "@id": `${SITE_URL}/#organization`,
+        name: "Gislaine Lozano Mentoria & Funew Agency",
+        url: SITE_URL,
+        logo: `${SITE_URL}/images/gislaine/logo-icon-only.png`,
+        contactPoint: {
+          "@type": "ContactPoint",
+          telephone: "+55-45-98823-1902",
+          contactType: "sales",
+          areaServed: "BR",
+          availableLanguage: ["Portuguese"],
+        },
       },
       {
         "@type": "WebSite",
         "@id": `${SITE_URL}/#website`,
         url: SITE_URL,
-        name: "Gislaine Lozano, Mentoria Estratégica de Vendas",
+        name: "Gislaine Lozano — Mentoria Estratégica de Vendas",
         description: "Transforme cada conversa em venda com o método validado de Gislaine Lozano.",
         inLanguage: "pt-BR",
         publisher: { "@id": `${SITE_URL}/#person` },
       },
       {
         "@type": "ProfessionalService",
-        name: "Mentoria Estratégica de Vendas",
-        description: "Mentoria e consultoria estratégica de vendas, posicionamento digital e comunicação.",
+        "@id": `${SITE_URL}/#service`,
+        name: "Mentoria Estratégica de Vendas — Gislaine Lozano",
+        description: "Mentoria e consultoria de vendas, posicionamento comercial e conversão no WhatsApp.",
         provider: { "@id": `${SITE_URL}/#person` },
-        areaServed: "BR",
+        areaServed: {
+          "@type": "Country",
+          name: "Brasil",
+        },
+        telephone: "+55-45-98823-1902",
         priceRange: "$$",
+        hasOfferCatalog: {
+          "@type": "OfferCatalog",
+          name: "Soluções de Vendas & Mentoria",
+          itemListElement: [
+            {
+              "@type": "Offer",
+              itemOffered: {
+                "@type": "Service",
+                name: "E-book Estratégico de Vendas",
+                description: "Scripts práticos e roteiros de fechamento rápido para WhatsApp.",
+              },
+            },
+            {
+              "@type": "Offer",
+              itemOffered: {
+                "@type": "Service",
+                name: "Aula Master de Vendas",
+                description: "Treinamento em técnicas de persuasão ética e negociação.",
+              },
+            },
+            {
+              "@type": "Offer",
+              itemOffered: {
+                "@type": "Service",
+                name: "Comunidade Exclusiva",
+                description: "Grupo VIP de networking e suporte contínuo em vendas.",
+              },
+            },
+            {
+              "@type": "Offer",
+              itemOffered: {
+                "@type": "Service",
+                name: "Mentoria Individual (1-on-1)",
+                description: "Acompanhamento estratégico personalizado com diagnóstico 360º.",
+              },
+            },
+            {
+              "@type": "Offer",
+              itemOffered: {
+                "@type": "Service",
+                name: "Consultoria Corporativa (Funew Agency)",
+                description: "Estruturação completa de equipes de vendas e processos comerciais.",
+              },
+            },
+          ],
+        },
       },
       {
         "@type": "FAQPage",
+        "@id": `${SITE_URL}/#faq`,
         mainEntity: [
           {
             "@type": "Question",
