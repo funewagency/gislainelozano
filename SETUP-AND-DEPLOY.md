@@ -83,7 +83,7 @@ DATABASE_PROVIDER="postgresql"
 # === Admin / Auth ===
 ADMIN_USERNAME="admin"
 # Hash SHA-256 da senha. Gere com:  echo -n "sua-senha" | shasum -a 256
-ADMIN_PASSWORD_HASH="ae06a2cd4b2865a4335e2adb844f7b439015dc7618abbae2220c919d21ccab5a"
+ADMIN_PASSWORD_HASH="gere_seu_hash_sha256_aqui"
 # Gere um segredo aleatório:  bunx openssl rand -base64 32  (ou: openssl rand -base64 32)
 NEXTAUTH_SECRET="troque-por-um-segredo-aleatorio"
 NEXTAUTH_URL="http://localhost:3000"
