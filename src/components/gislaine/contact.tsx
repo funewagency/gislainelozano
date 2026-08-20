@@ -49,7 +49,7 @@ export function ContactSection() {
         setFormState("success");
         track("contact_form_success", {});
         track("contact_form_submitted", { has_message: !!formData.message });
-        setFormData({ name: "", email: "", phone: "", message: "" });
+        setFormData({ name: "", email: "", phone: "", message: "", website: "" });
       } else {
         setFormState("error");
         track("contact_form_error", { error: "HTTP error" });
