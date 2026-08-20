@@ -3,10 +3,19 @@
 export const dynamic = 'force-dynamic';
 
 import { useEffect, useState, useCallback } from 'react';
+import nextDynamic from 'next/dynamic';
 import { C } from '@/components/gislaine/constants';
-import { OnboardingWizard } from '@/components/admin/onboarding-wizard';
-import { IntegrationCard } from '@/components/admin/integration-card';
 import { RetryBanner } from '@/components/admin/admin-skeleton';
+
+const OnboardingWizard = nextDynamic(
+  () => import('@/components/admin/onboarding-wizard').then((m) => m.OnboardingWizard),
+  { ssr: false }
+);
+
+const IntegrationCard = nextDynamic(
+  () => import('@/components/admin/integration-card').then((m) => m.IntegrationCard),
+  { ssr: false }
+);
 
 type ServiceKey = 'ga4' | 'fb' | 'gAds';
 

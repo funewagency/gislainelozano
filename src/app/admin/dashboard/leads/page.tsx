@@ -3,10 +3,15 @@
 export const dynamic = 'force-dynamic';
 
 import { useEffect, useState, useCallback, useMemo } from 'react';
+import nextDynamic from 'next/dynamic';
 import { C } from '@/components/gislaine/constants';
-import { LeadsTable } from '@/components/admin/leads-table';
 import { TableSkeleton } from '@/components/admin/admin-skeleton';
 import { RetryBanner } from '@/components/admin/admin-skeleton';
+
+const LeadsTable = nextDynamic(
+  () => import('@/components/admin/leads-table').then((m) => m.LeadsTable),
+  { ssr: false }
+);
 
 interface Lead {
   id: string;

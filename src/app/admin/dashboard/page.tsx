@@ -3,10 +3,15 @@
 export const dynamic = 'force-dynamic';
 
 import { useEffect, useState, useCallback } from 'react';
+import nextDynamic from 'next/dynamic';
 import { C } from '@/components/gislaine/constants';
-import { AnalyticsPanel } from '@/components/admin/analytics-panel';
 import { KpiSkeleton } from '@/components/admin/admin-skeleton';
 import { RetryBanner } from '@/components/admin/admin-skeleton';
+
+const AnalyticsPanel = nextDynamic(
+  () => import('@/components/admin/analytics-panel').then((m) => m.AnalyticsPanel),
+  { ssr: false }
+);
 
 interface SourceStat {
   source: string;

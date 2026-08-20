@@ -3,12 +3,25 @@
 export const dynamic = 'force-dynamic';
 
 import { useEffect, useCallback, useState } from 'react';
+import nextDynamic from 'next/dynamic';
 import { useCmsEditor } from '@/lib/cms-store';
-import { CmsEditor } from '@/components/admin/cms-editor';
 import { C } from '@/components/gislaine/constants';
 import { RetryBanner } from '@/components/admin/admin-skeleton';
 import { globalConfigSchema } from '@/lib/cms-types';
 import { DEFAULT_CMS_DATA } from '@/lib/cms-defaults';
+
+const CmsEditor = nextDynamic(
+  () => import('@/components/admin/cms-editor').then((m) => m.CmsEditor),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="space-y-4 animate-pulse">
+        <div className="h-8 w-1/3" style={{ backgroundColor: C.border }} />
+        <div className="h-96" style={{ backgroundColor: C.surfaceAlt }} />
+      </div>
+    ),
+  }
+);
 
 export default function ContentPage() {
   const { setServerData, isDirty } = useCmsEditor();

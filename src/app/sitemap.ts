@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next';
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://gislainelozano.com.br';
+const rawSiteUrl = (process.env.NEXT_PUBLIC_SITE_URL || '').trim();
+const SITE_URL = rawSiteUrl.length > 0 ? rawSiteUrl : 'https://gislainelozano.com.br';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();

@@ -735,7 +735,17 @@ function ImageGallery(raw: ImageGalleryProps) {
 
 // ── RichTextField (Lexical) ──────────────────────────────────────────
 
-import { LexicalRichTextField } from './rich-text-lexical';
+import nextDynamic from 'next/dynamic';
+
+const LexicalRichTextField = nextDynamic(
+  () => import('./rich-text-lexical').then((m) => m.LexicalRichTextField),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-32 rounded-xl animate-pulse" style={{ backgroundColor: C.surfaceAlt, border: `1.5px solid ${C.border}` }} />
+    ),
+  }
+);
 
 export function RichTextField(props: {
   label: string;
