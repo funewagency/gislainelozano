@@ -6,14 +6,22 @@ function hashPassword(password: string): string {
   return crypto.createHash('sha256').update(password).digest('hex');
 }
 
+function cleanVal(val?: string): string {
+  if (!val) return '';
+  let str = val.trim();
+  if ((str.startsWith('"') && str.endsWith('"')) || (str.startsWith("'") && str.endsWith("'"))) {
+    str = str.slice(1, -1).trim();
+  }
+  return str;
+}
+
 function timingSafeEqual(a: string, b: string): boolean {
-  const bufA = Buffer.from(a, 'utf-8');
-  const bufB = Buffer.from(b, 'utf-8');
+  const cleanA = cleanVal(a);
+  const cleanB = cleanVal(b);
+  const bufA = Buffer.from(cleanA, 'utf-8');
+  const bufB = Buffer.from(cleanB, 'utf-8');
   
-  // Para prevenir timing attack no tamanho do buffer, comparamos com buffer dummy
   if (bufA.length !== bufB.length) {
-    const dummy = Buffer.alloc(bufB.length);
-    crypto.timingSafeEqual(dummy, bufB);
     return false;
   }
   return crypto.timingSafeEqual(bufA, bufB);
@@ -32,36 +40,53 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        const adminUser = process.env.ADMIN_USERNAME?.trim();
-        const adminHash = process.env.ADMIN_PASSWORD_HASH?.trim();
+        const adminUser = cleanVal(process.env.ADMIN_USERNAME) || 'gislaine';
+        const adminHash = cleanVal(process.env.ADMIN_PASSWORD_HASH);
+        const adminPlain = cleanVal(process.env.ADMIN_PASSWORD);
 
-        if (!adminUser || !adminHash) {
-          console.error('[Auth Security] ADMIN_USERNAME ou ADMIN_PASSWORD_HASH não configurados.');
+        if (!adminHash && !adminPlain) {
+          console.error('[Auth Security] Nem ADMIN_PASSWORD_HASH nem ADMIN_PASSWORD configurados.');
           return null;
         }
 
-        const inputUser = String(credentials.username).trim();
-        const inputPass = String(credentials.password);
+        const inputUser = cleanVal(String(credentials.username));
+        const inputPass = String(credentials.password).trim();
 
         if (inputUser.length > 100 || inputPass.length > 200) {
           return null;
         }
 
-        const passwordHash = hashPassword(inputPass);
+        // 1. Valida usuário (case-insensitive)
         const isUserMatch = inputUser.toLowerCase() === adminUser.toLowerCase();
-        const isHashMatch = timingSafeEqual(passwordHash, adminHash);
-        const isPlainMatch = adminHash.length !== 64 && timingSafeEqual(inputPass, adminHash);
-        const isPassMatch = isHashMatch || isPlainMatch;
-
-        if (!isUserMatch || !isPassMatch) {
+        if (!isUserMatch) {
           return null;
         }
 
-        return {
-          id: '1',
-          name: adminUser,
-          email: `${adminUser}@admin.local`,
-        };
+        // 2. Valida contra ADMIN_PASSWORD direto (se definido)
+        if (adminPlain && timingSafeEqual(inputPass, adminPlain)) {
+          return {
+            id: '1',
+            name: adminUser,
+            email: `${adminUser}@admin.local`,
+          };
+        }
+
+        // 3. Valida contra ADMIN_PASSWORD_HASH (SHA-256 ou texto plano)
+        if (adminHash) {
+          const passwordHash = hashPassword(inputPass);
+          const isHashMatch = timingSafeEqual(passwordHash, adminHash);
+          const isDirectMatch = timingSafeEqual(inputPass, adminHash);
+
+          if (isHashMatch || isDirectMatch) {
+            return {
+              id: '1',
+              name: adminUser,
+              email: `${adminUser}@admin.local`,
+            };
+          }
+        }
+
+        return null;
       },
     }),
   ],
@@ -73,6 +98,19 @@ export const authOptions: NextAuthOptions = {
     strategy: 'jwt',
     maxAge: 24 * 60 * 60,
   },
+  cookies: {
+    sessionToken: {
+      name: process.env.NODE_ENV === 'production' && !process.env.NEXTAUTH_URL?.startsWith('http://localhost')
+        ? '__Secure-next-auth.session-token'
+        : 'next-auth.session-token',
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production' && !process.env.NEXTAUTH_URL?.startsWith('http://localhost'),
+      },
+    },
+  },
   callbacks: {
     async jwt({ token, user }) {
       if (user) token.role = 'admin';
@@ -83,5 +121,5 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET || 'gislaine-lozano-dev-secret-key-32chars',
 };

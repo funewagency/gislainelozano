@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  const secret = process.env.NEXTAUTH_SECRET;
+  const secret = process.env.NEXTAUTH_SECRET || 'gislaine-lozano-dev-secret-key-32chars';
 
   async function getAuthToken() {
     let token = await getToken({ req, secret });
