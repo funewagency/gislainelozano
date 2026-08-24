@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode, useState, useEffect, useRef } from 'react';
+import { ReactNode, useState, useEffect, useRef, useCallback } from 'react';
 import { signOut, useSession, SessionProvider } from 'next-auth/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
