@@ -1,10 +1,32 @@
-import { withAuth } from 'next-auth/middleware';
-import { NextResponse } from 'next/server';
+import { getToken } from 'next-auth/jwt';
+import { NextRequest, NextResponse } from 'next/server';
 
-export default withAuth(
-  function middleware(req) {
-    const isApiRoute = req.nextUrl.pathname.startsWith('/api/');
-    if (isApiRoute && !req.nextauth.token) {
+export async function middleware(req: NextRequest) {
+  const { pathname } = req.nextUrl;
+
+  // 1. Rota de login (pública)
+  if (pathname === '/admin/login') {
+    const token = await getToken({
+      req,
+      secret: process.env.NEXTAUTH_SECRET,
+    });
+    // Se o usuário já tiver sessão ativa, encaminha direto para o dashboard
+    if (token) {
+      return NextResponse.redirect(new URL('/admin/dashboard', req.url));
+    }
+    return NextResponse.next();
+  }
+
+  // 2. Rotas protegidas (/admin/* e /api/admin/*)
+  const token = await getToken({
+    req,
+    secret: process.env.NEXTAUTH_SECRET,
+  });
+
+  const isApiRoute = pathname.startsWith('/api/');
+
+  if (!token) {
+    if (isApiRoute) {
       return NextResponse.json(
         { error: 'Não autorizado', code: 'UNAUTHORIZED' },
         {
@@ -13,23 +35,13 @@ export default withAuth(
         },
       );
     }
-    return NextResponse.next();
-  },
-  {
-    callbacks: {
-      authorized: ({ token, req }) => {
-        // Rotas públicas do admin como a tela de login não exigem token
-        if (req.nextUrl.pathname === '/admin/login') {
-          return true;
-        }
-        return !!token;
-      },
-    },
-    pages: {
-      signIn: '/admin/login',
-    },
-  },
-);
+    const signInUrl = new URL('/admin/login', req.url);
+    signInUrl.searchParams.set('callbackUrl', req.nextUrl.pathname);
+    return NextResponse.redirect(signInUrl);
+  }
+
+  return NextResponse.next();
+}
 
 export const config = {
   matcher: [
@@ -38,3 +50,4 @@ export const config = {
     '/api/generate-images',
   ],
 };
+

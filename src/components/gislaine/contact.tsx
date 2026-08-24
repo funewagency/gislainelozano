@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { useCmsData } from "@/hooks/use-cms-data";
 import { motion, useInView } from "framer-motion";
 import { C, headingFont, bodyFont } from "./constants";
+import { formatBrazilianPhone } from "@/lib/phone";
 import { RenderContent } from "@/lib/html-render";
 import { Particles } from "./particles";
 import { Send, CheckCircle, Loader2 } from "lucide-react";
@@ -60,20 +61,13 @@ export function ContactSection() {
     }
   };
 
-  const formatPhone = (value: string) => {
-    const digits = value.replace(/\D/g, "").slice(0, 11);
-    if (digits.length <= 2) return `(${digits}`;
-    if (digits.length <= 7) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
-    return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
-  };
-
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: name === "phone" ? formatPhone(value) : value,
+      [name]: name === "phone" ? formatBrazilianPhone(value) : value,
     }));
 
     if (formState === "idle") {
@@ -383,7 +377,7 @@ export function ContactSection() {
                   </div>
 
                   {formState === "error" && (
-                    <p className="text-xs" style={{ color: "#E57373" }}>
+                    <p className="text-xs font-medium" style={{ color: C.error }}>
                       Ocorreu um erro. Tente novamente.
                     </p>
                   )}

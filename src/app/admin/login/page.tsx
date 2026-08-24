@@ -28,6 +28,13 @@ export default function AdminLoginPage() {
     }
   }, [mounted]);
 
+  const getCallbackUrl = useCallback(() => {
+    if (typeof window === 'undefined') return '/admin/dashboard';
+    const params = new URLSearchParams(window.location.search);
+    const cb = params.get('callbackUrl');
+    return cb && cb.startsWith('/admin') ? cb : '/admin/dashboard';
+  }, []);
+
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
@@ -45,27 +52,28 @@ export default function AdminLoginPage() {
       setLoading(true);
 
       try {
+        const targetUrl = getCallbackUrl();
         const result = await signIn('credentials', {
           username: trimmedUser,
           password: trimmedPass,
           redirect: false,
+          callbackUrl: targetUrl,
         });
 
         if (result?.error) {
           setError('Usuário ou senha inválidos.');
+          setLoading(false);
           return;
         }
 
-        router.push('/admin/dashboard');
-        router.refresh();
+        window.location.href = targetUrl;
       } catch {
         setNetworkError(true);
         setError('Erro de conexão. Tente novamente.');
-      } finally {
         setLoading(false);
       }
     },
-    [username, password, router]
+    [username, password, getCallbackUrl]
   );
 
   const togglePassword = useCallback(() => setShowPassword((s) => !s), []);
@@ -158,6 +166,7 @@ export default function AdminLoginPage() {
                 <input
                   ref={usernameRef}
                   id="username"
+                  name="username"
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
@@ -189,6 +198,7 @@ export default function AdminLoginPage() {
               <div className="relative">
                 <input
                   id="password"
+                  name="password"
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}

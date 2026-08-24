@@ -7,6 +7,7 @@ import { track } from '@/lib/analytics';
 import { getMarketingAttribution } from '@/lib/use-marketing-attribution';
 import { Loader2, X } from 'lucide-react';
 import { useWhatsAppModal } from './whatsapp-context';
+import { formatBrazilianPhone } from '@/lib/phone';
 
 interface WhatsAppLeadModalProps {
   open: boolean;
@@ -30,7 +31,7 @@ export function WhatsAppLeadModal({ open, onClose, source = 'whatsapp-fab' }: Wh
       const saved = getLeadData();
       if (saved.name) setName(saved.name);
       if (saved.email) setEmail(saved.email);
-      if (saved.phone) setPhone(saved.phone);
+      if (saved.phone) setPhone(formatBrazilianPhone(saved.phone));
       setError('');
       setSubmitted(false);
       setWebsite('');
@@ -212,7 +213,7 @@ export function WhatsAppLeadModal({ open, onClose, source = 'whatsapp-fab' }: Wh
                   id="lead-phone"
                   type="tel"
                   value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
+                  onChange={(e) => setPhone(formatBrazilianPhone(e.target.value))}
                   className="w-full px-3 py-2.5 text-sm outline-none focus:border-accent transition-colors font-sans"
                   style={{
                     fontFamily: 'var(--font-jakarta)',
@@ -221,7 +222,7 @@ export function WhatsAppLeadModal({ open, onClose, source = 'whatsapp-fab' }: Wh
                     backgroundColor: C.white,
                     borderRadius: 0,
                   }}
-                  placeholder="(DDD) 99999-9999"
+                  placeholder="(11) 99999-9999"
                   required
                 />
               </div>
