@@ -60,13 +60,13 @@ export default function AdminLoginPage() {
           callbackUrl: targetUrl,
         });
 
-        if (result?.error) {
+        if (!result || result.error) {
           setError('Usuário ou senha inválidos.');
           setLoading(false);
           return;
         }
 
-        window.location.href = targetUrl;
+        window.location.href = result.url || targetUrl;
       } catch {
         setNetworkError(true);
         setError('Erro de conexão. Tente novamente.');

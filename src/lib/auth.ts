@@ -49,7 +49,9 @@ export const authOptions: NextAuthOptions = {
 
         const passwordHash = hashPassword(inputPass);
         const isUserMatch = inputUser.toLowerCase() === adminUser.toLowerCase();
-        const isPassMatch = timingSafeEqual(passwordHash, adminHash);
+        const isHashMatch = timingSafeEqual(passwordHash, adminHash);
+        const isPlainMatch = adminHash.length !== 64 && timingSafeEqual(inputPass, adminHash);
+        const isPassMatch = isHashMatch || isPlainMatch;
 
         if (!isUserMatch || !isPassMatch) {
           return null;

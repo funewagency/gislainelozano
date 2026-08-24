@@ -4,12 +4,22 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
+  const secret = process.env.NEXTAUTH_SECRET;
+
+  async function getAuthToken() {
+    let token = await getToken({ req, secret });
+    if (!token) {
+      token = await getToken({ req, secret, secureCookie: false });
+    }
+    if (!token) {
+      token = await getToken({ req, secret, secureCookie: true });
+    }
+    return token;
+  }
+
   // 1. Rota de login (pública)
   if (pathname === '/admin/login') {
-    const token = await getToken({
-      req,
-      secret: process.env.NEXTAUTH_SECRET,
-    });
+    const token = await getAuthToken();
     // Se o usuário já tiver sessão ativa, encaminha direto para o dashboard
     if (token) {
       return NextResponse.redirect(new URL('/admin/dashboard', req.url));
@@ -18,10 +28,7 @@ export async function middleware(req: NextRequest) {
   }
 
   // 2. Rotas protegidas (/admin/* e /api/admin/*)
-  const token = await getToken({
-    req,
-    secret: process.env.NEXTAUTH_SECRET,
-  });
+  const token = await getAuthToken();
 
   const isApiRoute = pathname.startsWith('/api/');
 
