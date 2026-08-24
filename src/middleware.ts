@@ -17,13 +17,8 @@ export async function middleware(req: NextRequest) {
     return token;
   }
 
-  // 1. Rota de login (pública)
-  if (pathname === '/admin/login') {
-    const token = await getAuthToken();
-    // Se o usuário já tiver sessão ativa, encaminha direto para o dashboard
-    if (token) {
-      return NextResponse.redirect(new URL('/admin/dashboard', req.url));
-    }
+  // 1. Rota de login e rotas de autenticação (públicas)
+  if (pathname === '/admin/login' || pathname.startsWith('/api/auth/')) {
     return NextResponse.next();
   }
 

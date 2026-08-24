@@ -46,6 +46,7 @@ function AdminShell({ children }: { children: ReactNode }) {
 
   const handleLogout = useCallback(async () => {
     try {
+      await fetch('/api/auth/logout', { method: 'POST' });
       await signOut({ redirect: false });
     } catch {
       // ignore
