@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
-import { unauthorized, badRequest, serverError, rateLimited } from '@/lib/api-utils';
+import { unauthorized, badRequest, serverError, rateLimited, requireAuth } from '@/lib/api-utils';
 import { mutationLimiter, shouldRateLimit } from '@/lib/rate-limit';
 
 const GA4_REGEX = /^G-[A-Z0-9]{8,}$/i;
@@ -14,7 +12,7 @@ interface TestPayload {
 }
 
 export async function POST(request: NextRequest) {
-  const session = await getServerSession(authOptions);
+  const session = await requireAuth(request);
   if (!session) {
     return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
   }

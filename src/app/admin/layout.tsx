@@ -44,6 +44,15 @@ function AdminShell({ children }: { children: ReactNode }) {
   const isLoginPage = pathname === '/admin/login';
   const isPreviewPage = pathname === '/admin/preview';
 
+  const handleLogout = useCallback(async () => {
+    try {
+      await signOut({ redirect: false });
+    } catch {
+      // ignore
+    }
+    window.location.href = '/admin/login';
+  }, []);
+
   useEffect(() => { setSidebarOpen(false); }, [pathname]);
 
   useEffect(() => {
@@ -272,7 +281,7 @@ function AdminShell({ children }: { children: ReactNode }) {
 
             {/* Logout button */}
             <button
-              onClick={() => signOut({ callbackUrl: '/admin/login' })}
+              onClick={handleLogout}
               className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium w-full transition-all duration-150 no-underline rounded-xl focus-visible:ring-2 focus-visible:ring-white/50 group"
               style={{ color: 'rgba(255,255,255,0.55)' }}
               type="button"

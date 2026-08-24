@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
 import sharp from 'sharp';
 import { writeFile, mkdir } from 'fs/promises';
 import path from 'path';
-import { unauthorized, serverError, badRequest, rateLimited } from '@/lib/api-utils';
+import { unauthorized, serverError, badRequest, rateLimited, requireAuth } from '@/lib/api-utils';
 import { mutationLimiter } from '@/lib/rate-limit';
 import { validateImageMagicBytes, sanitizeSafeFilename } from '@/lib/file-security';
 
@@ -14,7 +12,7 @@ const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/avif', 'i
 
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await requireAuth(request);
     if (!session?.user) return unauthorized();
 
     const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';

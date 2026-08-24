@@ -2,9 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { globalConfigSchema } from '@/lib/cms-types';
 import { DEFAULT_CMS_DATA, DEFAULT_THEME } from '@/lib/cms-defaults';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
-import { unauthorized, serverError, badRequest, rateLimited } from '@/lib/api-utils';
+import { unauthorized, serverError, badRequest, rateLimited, requireAuth } from '@/lib/api-utils';
 import { mutationLimiter, shouldRateLimit } from '@/lib/rate-limit';
 
 const TENANT = 'gislaine';
@@ -150,7 +148,7 @@ export async function GET() {
 
 export async function PUT(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await requireAuth(request);
     if (!session?.user) return unauthorized();
 
     if (shouldRateLimit()) {

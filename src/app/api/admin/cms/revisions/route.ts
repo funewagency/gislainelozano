@@ -1,15 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
-import { unauthorized, serverError, badRequest, rateLimited } from '@/lib/api-utils';
+import { unauthorized, serverError, badRequest, rateLimited, requireAuth } from '@/lib/api-utils';
 import { mutationLimiter, shouldRateLimit } from '@/lib/rate-limit';
 
 const TENANT = 'gislaine';
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await requireAuth(request);
     if (!session?.user) return unauthorized();
 
     if (shouldRateLimit()) {
@@ -51,7 +49,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await requireAuth(request);
     if (!session?.user) return unauthorized();
 
     if (shouldRateLimit()) {

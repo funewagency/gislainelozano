@@ -1,14 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
 import ZAI from 'z-ai-web-dev-sdk';
 import fs from 'fs';
 import path from 'path';
 import { generateLimiter, shouldRateLimit } from '@/lib/rate-limit';
-import { unauthorized } from '@/lib/api-utils';
+import { unauthorized, requireAuth } from '@/lib/api-utils';
 
 export async function POST(request: NextRequest) {
-  const session = await getServerSession(authOptions);
+  const session = await requireAuth(request);
   if (!session?.user) {
     return unauthorized();
   }

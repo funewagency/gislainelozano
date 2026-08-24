@@ -1,16 +1,14 @@
 import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
 import { readdir, stat } from 'fs/promises';
 import path from 'path';
-import { unauthorized, serverError, rateLimited } from '@/lib/api-utils';
+import { unauthorized, serverError, rateLimited, requireAuth } from '@/lib/api-utils';
 import { readLimiter, shouldRateLimit } from '@/lib/rate-limit';
 
 const UPLOAD_DIR = path.join(process.cwd(), 'public', 'uploads');
 
 export async function GET(request: Request) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await requireAuth(request);
     if (!session?.user) return unauthorized();
 
     if (shouldRateLimit()) {

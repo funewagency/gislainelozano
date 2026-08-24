@@ -1,13 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
 import { db } from '@/lib/db';
-import { unauthorized, serverError, badRequest, rateLimited } from '@/lib/api-utils';
+import { unauthorized, serverError, badRequest, rateLimited, requireAuth } from '@/lib/api-utils';
 import { mutationLimiter, readLimiter, shouldRateLimit } from '@/lib/rate-limit';
 
 export async function GET(request: Request) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await requireAuth(request);
     if (!session) return unauthorized();
 
     if (shouldRateLimit()) {
@@ -39,7 +37,7 @@ export async function GET(request: Request) {
 
 export async function PUT(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await requireAuth(request);
     if (!session) return unauthorized();
 
     if (shouldRateLimit()) {
