@@ -25,6 +25,7 @@ interface PageViewTrend {
 
 interface PostHogData {
   configured: boolean;
+  error?: string;
   pageViews: { total: number; trend: PageViewTrend[] };
   uniqueVisitors: number;
   topSources: SourceStat[];

@@ -33,6 +33,7 @@ interface FunnelStep {
 
 interface PostHogData {
   configured: boolean;
+  error?: string;
   pageViews: { total: number; trend: PageViewTrend[] };
   uniqueVisitors: number;
   topSources: SourceStat[];
@@ -65,6 +66,7 @@ const sourceLabels: Record<string, string> = {
 
 export function AnalyticsPanel({ leadsTotal, leadsBySource, posthog, loading }: AnalyticsPanelProps) {
   const phConfigured = posthog?.configured;
+  const phError = posthog?.error;
   const phPageViews = posthog?.pageViews?.total ?? 0;
   const phUniqueVisitors = posthog?.uniqueVisitors ?? 0;
   const conversionRate = phUniqueVisitors > 0
@@ -88,6 +90,21 @@ export function AnalyticsPanel({ leadsTotal, leadsBySource, posthog, loading }: 
 
   return (
     <div className="space-y-8">
+      {/* PostHog Error Alert */}
+      {phError && (
+        <div className="p-4 border-l-4 text-sm space-y-1" style={{ backgroundColor: '#FEF2F2', borderColor: '#EF4444', color: '#991B1B' }}>
+          <p className="font-bold flex items-center gap-2">
+            <span>⚠️</span> Erro de comunicação com o PostHog
+          </p>
+          <p className="text-xs opacity-90">{phError}</p>
+          {phError.includes('query:read') && (
+            <p className="text-xs mt-2 font-medium" style={{ color: '#7F1D1D' }}>
+              💡 <strong>Como resolver:</strong> A sua chave do PostHog (<code>POSTHOG_API_KEY</code>) foi criada sem a permissão <strong>query:read</strong>. No PostHog, acesse <em>Settings → Personal API Keys</em>, crie uma chave com a permissão <strong>Query: Read</strong> e atualize a variável <code>POSTHOG_API_KEY</code> no seu arquivo <code>.env</code>.
+            </p>
+          )}
+        </div>
+      )}
+
       {/* KPI Cards Row */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <KpiCard
@@ -99,13 +116,13 @@ export function AnalyticsPanel({ leadsTotal, leadsBySource, posthog, loading }: 
         <KpiCard
           label="Visualizações"
           value={phPageViews.toLocaleString('pt-BR')}
-          subtitle={phConfigured ? 'PostHog' : 'não configurado'}
+          subtitle={phConfigured ? (phError ? 'erro PostHog' : 'PostHog') : 'não configurado'}
           loading={loading || !posthog}
         />
         <KpiCard
           label="Visitantes Únicos"
           value={phUniqueVisitors.toLocaleString('pt-BR')}
-          subtitle={phConfigured ? '30 dias' : 'não configurado'}
+          subtitle={phConfigured ? (phError ? 'erro PostHog' : '30 dias') : 'não configurado'}
           loading={loading || !posthog}
         />
         <KpiCard

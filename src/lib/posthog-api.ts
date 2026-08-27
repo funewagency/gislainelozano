@@ -1,7 +1,21 @@
-const rawHost = (process.env.POSTHOG_HOST || process.env.NEXT_PUBLIC_POSTHOG_HOST || '').trim();
-const POSTHOG_HOST = rawHost.length > 0 ? rawHost : 'https://us.posthog.com';
-const POSTHOG_API_KEY = (process.env.POSTHOG_API_KEY || process.env.NEXT_PUBLIC_POSTHOG_API_KEY || '').trim() || undefined;
-const POSTHOG_PROJECT_ID = (process.env.POSTHOG_PROJECT_ID || process.env.NEXT_PUBLIC_POSTHOG_PROJECT_ID || '').trim() || undefined;
+function getPostHogHost(): string {
+  const rawHost = (process.env.POSTHOG_HOST || process.env.NEXT_PUBLIC_POSTHOG_HOST || '').trim();
+  if (!rawHost) return 'https://us.posthog.com';
+  // If ingestion host (us.i.posthog.com / eu.i.posthog.com) was set, map to query host
+  if (rawHost.includes('us.i.posthog.com')) return 'https://us.posthog.com';
+  if (rawHost.includes('eu.i.posthog.com')) return 'https://eu.posthog.com';
+  return rawHost;
+}
+
+function getPostHogApiKey(): string | undefined {
+  return (process.env.POSTHOG_API_KEY || process.env.NEXT_PUBLIC_POSTHOG_API_KEY || '').trim() || undefined;
+}
+
+function getProjectId(): string {
+  const id = (process.env.POSTHOG_PROJECT_ID || process.env.NEXT_PUBLIC_POSTHOG_PROJECT_ID || '').trim();
+  if (!id) throw new Error('POSTHOG_PROJECT_ID não configurado no .env');
+  return id;
+}
 
 interface QueryResult {
   columns: string[];
@@ -19,31 +33,35 @@ interface PostHogInsight {
 }
 
 async function fetchFromPostHog<T>(path: string, options?: RequestInit): Promise<T> {
-  if (!POSTHOG_API_KEY) {
+  const apiKey = getPostHogApiKey();
+  if (!apiKey) {
     throw new Error('POSTHOG_API_KEY not configured');
   }
 
-  const url = `${POSTHOG_HOST}${path}`;
+  const host = getPostHogHost();
+  const url = `${host}${path}`;
   const res = await fetch(url, {
     ...options,
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${POSTHOG_API_KEY}`,
+      Authorization: `Bearer ${apiKey}`,
       ...(options?.headers ?? {}),
     },
   });
 
   if (!res.ok) {
     const text = await res.text();
-    throw new Error(`PostHog API error (${res.status}): ${text}`);
+    let detail = text;
+    try {
+      const parsed = JSON.parse(text);
+      if (parsed.detail) detail = parsed.detail;
+    } catch {
+      // keep raw text
+    }
+    throw new Error(`PostHog API error (${res.status}): ${detail}`);
   }
 
   return res.json();
-}
-
-function getProjectId(): string {
-  if (!POSTHOG_PROJECT_ID) throw new Error('POSTHOG_PROJECT_ID not configured');
-  return POSTHOG_PROJECT_ID;
 }
 
 async function runHogQL(query: string): Promise<QueryResult> {
@@ -55,6 +73,7 @@ async function runHogQL(query: string): Promise<QueryResult> {
 }
 
 export interface PostHogAnalytics {
+  error?: string;
   pageViews: { total: number; trend: { date: string; count: number }[] };
   uniqueVisitors: number;
   topSources: { source: string; count: number }[];
@@ -85,8 +104,9 @@ export function getPostHogCacheStats() {
   return { entries: analyticsCache.size, valid };
 }
 
-function emptyPostHogAnalytics(): PostHogAnalytics {
+function emptyPostHogAnalytics(error?: string): PostHogAnalytics {
   return {
+    error,
     pageViews: { total: 0, trend: [] },
     uniqueVisitors: 0,
     topSources: [],
@@ -209,8 +229,9 @@ export async function getPostHogAnalytics(days = 30): Promise<PostHogAnalytics> 
     analyticsCache.set(cacheKey, { expiresAt: Date.now() + CACHE_TTL_MS, data: result });
     return result;
   } catch (error) {
-    console.error('PostHog analytics fetch error:', error);
-    return emptyPostHogAnalytics();
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error('PostHog analytics fetch error:', errorMsg);
+    return emptyPostHogAnalytics(errorMsg);
   }
 }
 

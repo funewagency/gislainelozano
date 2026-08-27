@@ -139,6 +139,7 @@ describe('fetchFromPostHog - API error', () => {
     mockFetch.mockRejectedValue(new Error('network error'))
     const result = await mod.getPostHogAnalytics()
     expect(result).toEqual({
+      error: 'network error',
       pageViews: { total: 0, trend: [] },
       uniqueVisitors: 0,
       topSources: [],
@@ -226,6 +227,7 @@ describe('getPostHogAnalytics network error', () => {
     mockFetch.mockRejectedValue(new Error('network error'))
     const result = await mod.getPostHogAnalytics()
     expect(result).toEqual({
+      error: 'network error',
       pageViews: { total: 0, trend: [] }, uniqueVisitors: 0,
       topSources: [], topPages: [], recentEvents: [], conversionFunnel: [],
     })
