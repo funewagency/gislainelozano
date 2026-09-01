@@ -47,13 +47,13 @@ export function BioSection() {
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8 }}
           >
-            <div className="flex items-center gap-4 mb-6">
+            <div className="flex items-center gap-4 mb-5">
               <div
                 className="h-[2px] w-16"
                 style={{ backgroundColor: C.accent }}
               />
               <span
-                className="text-[13px] uppercase tracking-[0.25em] font-semibold"
+                className="text-xs sm:text-[13px] uppercase tracking-[0.25em] font-semibold"
                 style={{ ...bodyFont, color: C.accent }}
               >
                 {bio.eyebrow}
@@ -61,14 +61,14 @@ export function BioSection() {
             </div>
 
             <h2
-              className="text-4xl md:text-5xl lg:text-6xl mb-8 leading-tight font-bold"
+              className="text-2xl sm:text-3xl lg:text-4xl mb-6 leading-[1.2] font-bold tracking-tight text-balance"
               style={{ ...headingFont, color: C.primary }}
             >
               <RenderContent content={bio.titleHtml} />
             </h2>
 
             <div
-              className="space-y-6 mb-8 text-lg md:text-xl leading-relaxed"
+              className="space-y-4 mb-8 text-base sm:text-lg leading-relaxed font-normal"
               style={{ ...bodyFont, color: C.muted }}
             >
               {bio.paragraphs.map((p, i) => (
@@ -78,28 +78,28 @@ export function BioSection() {
 
             <div className="mb-8">
               <p
-                className="text-[11px] uppercase tracking-[0.3em] mb-5"
+                className="text-xs sm:text-[13px] uppercase tracking-[0.2em] font-bold mb-4"
                 style={{ ...bodyFont, color: C.accent }}
               >
                 Meu percurso profissional
               </p>
 
-              <ul className="space-y-3">
+              <ul className="space-y-3.5">
                 {bio.careerPath.map((item, i) => (
                   <motion.li
                     key={i}
                     className="flex items-start gap-3"
                     initial={{ opacity: 0, x: -16 }}
                     animate={isInView ? { opacity: 1, x: 0 } : {}}
-                    transition={{ duration: 0.4, delay: 0.6 + i * 0.1 }}
+                    transition={{ duration: 0.4, delay: 0.5 + i * 0.08 }}
                   >
                     <span
-                      className="mt-[7px] shrink-0 w-2 h-2 rounded-full"
+                      className="mt-2 shrink-0 w-2 h-2 rounded-full"
                       style={{ backgroundColor: C.accent }}
                     />
                     <span
-                      className="text-sm leading-relaxed"
-                      style={{ ...bodyFont, color: C.muted }}
+                      className="text-sm sm:text-base leading-relaxed font-medium"
+                      style={{ ...bodyFont, color: C.text }}
                     >
                       {item}
                     </span>
@@ -108,22 +108,18 @@ export function BioSection() {
               </ul>
             </div>
 
-            <motion.div className="relative pl-4">
-              <div
-                className="absolute top-0 left-0 w-[2px] h-full"
-                style={{ backgroundColor: C.accent, opacity: 0.38 }}
-              />
+            <motion.div className="relative pl-5 py-3 border-l-2 rounded-r-xl" style={{ borderColor: C.accent, backgroundColor: 'rgba(223,130,60,0.04)' }}>
               <motion.p
-                className="leading-relaxed text-sm"
+                className="leading-relaxed text-sm sm:text-base"
                 style={{ ...bodyFont, color: C.muted }}
                 initial={{ opacity: 0, y: 10 }}
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.5, delay: 1.2 }}
+                transition={{ duration: 0.5, delay: 1.0 }}
               >
                 Ao longo dos últimos anos, acompanhei empresas que cresceram,
                 escalaram e também muitas que travaram nas vendas por erros
-                simples de comunicação. E um deles aparece o tempo todo:{" "}
-                <strong style={{ color: C.text }}>
+                simples de comunicação. E um deles aparece o tempo todo:{' '}
+                <strong style={{ color: C.primary }} className="font-semibold">
                   atendimento mal estruturado.
                 </strong>
               </motion.p>
@@ -137,22 +133,21 @@ export function BioSection() {
             transition={{ duration: 0.8, delay: 0.3 }}
           >
             <motion.div
-              className="absolute top-[6px] left-[6px] w-[calc(100%-6px)] h-[calc(100%-6px)]"
+              className="absolute top-[8px] left-[8px] w-[calc(100%-8px)] h-[calc(100%-8px)] rounded-3xl"
               style={{ backgroundColor: C.accent, opacity: 0.85 }}
               initial={{ opacity: 0, scale: 0.95 }}
               animate={isInView ? { opacity: 0.85, scale: 1 } : {}}
-              transition={{ duration: 0.8, delay: 0.6 }}
+              transition={{ duration: 0.8, delay: 0.5 }}
             />
 
             <div
-              className="relative overflow-hidden"
+              className="relative overflow-hidden rounded-3xl"
               style={{
                 aspectRatio: "2/3",
                 boxShadow: `
-                  0 2px 8px rgba(25,57,108,0.25),
-                  0 4px 20px rgba(25,57,108,0.15),
-                  0 8px 50px rgba(25,57,108,0.08),
-                  0 0 40px rgba(223,130,60,0.12)
+                  0 4px 12px rgba(25,57,108,0.18),
+                  0 12px 36px rgba(25,57,108,0.12),
+                  0 24px 60px rgba(25,57,108,0.08)
                 `,
               }}
             >
@@ -162,74 +157,11 @@ export function BioSection() {
                 className="w-full h-full object-cover object-top"
               />
 
+              {/* Degradê apenas na base inferior para contraste suave do badge */}
               <div
-                className="absolute inset-0"
+                className="absolute inset-x-0 bottom-0 h-1/3 pointer-events-none"
                 style={{
-                  background: `linear-gradient(180deg,
-                    transparent 0%,
-                    transparent 35%,
-                    rgba(25,57,108,0.15) 50%,
-                    rgba(25,57,108,0.50) 65%,
-                    rgba(25,57,108,0.80) 80%,
-                    rgba(25,57,108,0.92) 92%,
-                    #19396C 100%
-                  )`,
-                }}
-              />
-
-              <div
-                className="absolute inset-0"
-                style={{
-                  background: `linear-gradient(270deg,
-                    rgba(250,246,239,0.50) 0%,
-                    rgba(250,246,239,0.20) 8%,
-                    transparent 22%
-                  )`,
-                }}
-              />
-
-              <div
-                className="absolute inset-0"
-                style={{
-                  background: `radial-gradient(ellipse 120% 50% at 50% 0%, rgba(250,246,239,0.12) 0%, transparent 60%)`,
-                }}
-              />
-
-              <div
-                className="absolute inset-0"
-                style={{
-                  background: `linear-gradient(90deg,
-                    rgba(223,130,60,0.08) 0%,
-                    transparent 12%
-                  )`,
-                }}
-              />
-
-              <div
-                className="absolute inset-0"
-                style={{
-                  background: `radial-gradient(ellipse 80% 60% at 20% 100%, rgba(223,130,60,0.15) 0%, transparent 70%)`,
-                }}
-              />
-
-              <div
-                className="absolute inset-0 opacity-[0.03]"
-                style={{
-                  background: `linear-gradient(135deg,
-                    transparent 30%,
-                    rgba(223,130,60,0.5) 50%,
-                    transparent 70%
-                  )`,
-                  backgroundSize: "200% 200%",
-                  animation: "shimmer 8s linear infinite",
-                }}
-              />
-
-              <div
-                className="absolute top-[10%] right-0 w-[2px] h-[80%]"
-                style={{
-                  background: `linear-gradient(180deg, transparent 0%, ${C.accent} 30%, ${C.accent} 70%, transparent 100%)`,
-                  opacity: 0.38,
+                  background: 'linear-gradient(to top, rgba(25,57,108,0.7) 0%, rgba(25,57,108,0.15) 60%, transparent 100%)',
                 }}
               />
             </div>

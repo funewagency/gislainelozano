@@ -80,7 +80,7 @@ export function PosicionamentoSection() {
         </motion.div>
 
         <motion.h2
-          className="text-4xl md:text-5xl lg:text-6xl leading-tight mb-12"
+          className="text-2xl sm:text-3xl lg:text-4xl leading-tight mb-8 font-bold"
           style={{ ...headingFont, fontWeight: 800, letterSpacing: '-0.02em' }}
           initial={{ opacity: 0, y: 28 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}

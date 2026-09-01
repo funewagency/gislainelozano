@@ -67,8 +67,8 @@ export function HeroSection() {
         >
           <motion.div variants={itemVariants}>
             <h1
-              className="text-[20px] leading-[1.15] mb-3"
-              style={{ ...headingFont, color: C.white, fontWeight: 400 }}
+              className="text-xl sm:text-2xl font-bold leading-[1.2] mb-3"
+              style={{ ...headingFont, color: C.white }}
             >
               <RenderContent content={hero.titleHtml} />
             </h1>
@@ -76,7 +76,7 @@ export function HeroSection() {
 
           <motion.div variants={itemVariants}>
             <p
-              className="text-[11px] leading-relaxed mb-4"
+              className="text-xs sm:text-sm leading-relaxed mb-4"
               style={{ ...bodyFont, color: 'rgba(255,255,255,0.75)' }}
             >
               {hero.description}
@@ -170,10 +170,10 @@ export function HeroSection() {
           initial="hidden"
           animate="visible"
         >
-          <div className="sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl">
+          <div className="sm:max-w-md md:max-w-lg lg:max-w-[580px] xl:max-w-[660px]">
             <motion.div variants={itemVariants}>
               <h1
-                className="text-[26px] md:text-[28px] lg:text-[30px] xl:text-[34px] leading-[1.12] mb-3 sm:mb-4 lg:mb-5"
+                className="text-2xl sm:text-[28px] lg:text-[32px] xl:text-[36px] leading-[1.18] font-bold mb-4 sm:mb-5 tracking-tight"
                 style={{ ...headingFont, color: C.white }}
               >
                 <RenderContent content={hero.titleHtml} />
@@ -182,7 +182,7 @@ export function HeroSection() {
 
             <motion.div variants={itemVariants}>
               <p
-                className="text-[11px] sm:text-xs lg:text-sm xl:text-base mb-4 sm:mb-5 lg:mb-6 leading-relaxed max-w-lg"
+                className="text-sm sm:text-base lg:text-lg mb-6 leading-relaxed max-w-lg"
                 style={{ ...bodyFont, color: 'rgba(255,255,255,0.75)' }}
               >
                 {hero.description}

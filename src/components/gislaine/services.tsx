@@ -69,7 +69,7 @@ export function ServicesSection() {
             />
           </div>
           <h2
-            className="text-4xl md:text-5xl lg:text-6xl leading-tight font-bold"
+            className="text-2xl sm:text-3xl lg:text-4xl leading-tight font-bold"
             style={{ ...headingFont, color: C.primary }}
           >
             <RenderContent content={services.titleHtml} />

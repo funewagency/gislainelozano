@@ -120,7 +120,7 @@ export function ContactSection() {
             </div>
 
             <h2
-              className="text-4xl md:text-5xl lg:text-6xl mb-8 leading-tight font-bold"
+              className="text-2xl sm:text-3xl lg:text-4xl mb-6 leading-tight font-bold"
               style={{ ...headingFont, color: C.white }}
             >
               <RenderContent content={contact.titleHtml} />

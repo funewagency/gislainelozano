@@ -126,7 +126,7 @@ export function FaqSection() {
             <div className="h-[2px] w-16" style={{ backgroundColor: C.accent }} />
           </div>
           <h2
-            className="text-4xl md:text-5xl lg:text-6xl mb-4 font-bold"
+            className="text-2xl sm:text-3xl lg:text-4xl mb-4 font-bold leading-tight"
             style={{ ...headingFont, color: C.white }}
           >
             <RenderContent content={faq.titleHtml} />
