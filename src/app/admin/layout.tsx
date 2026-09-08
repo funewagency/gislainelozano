@@ -14,12 +14,14 @@ import {
   LogOut,
   Menu,
   X,
+  Briefcase,
 } from 'lucide-react';
 
 const navItems = [
   { label: 'Conteúdo (CMS)', href: '/admin/dashboard/content', icon: FileText },
   { label: 'Painel', href: '/admin/dashboard', icon: LayoutDashboard },
   { label: 'Leads', href: '/admin/dashboard/leads', icon: Users },
+  { label: 'Serviços', href: '/admin/dashboard/settings/services', icon: Briefcase },
   { label: 'Configurações', href: '/admin/dashboard/settings', icon: Settings },
 ];
 
