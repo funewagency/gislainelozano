@@ -66,7 +66,9 @@ model Service {
   description String
   ctaText     String
   ctaLink     String?
+  includes    String?
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
+

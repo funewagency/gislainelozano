@@ -2,8 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { unauthorized, serverError, badRequest, rateLimited, requireAuth } from '@/lib/api-utils';
 import { mutationLimiter, readLimiter, shouldRateLimit } from '@/lib/rate-limit';
-
-const MAX_SERVICES = 5;
+import { formatIncludes, syncServicesToCmsState } from '@/lib/services-sync';
 
 // ── Helpers ──────────────────────────────────────────────────────────────
 
@@ -45,14 +44,8 @@ export async function POST(request: NextRequest) {
       if (!allowed) return rateLimited(30);
     }
 
-    // Enforce max services limit
-    const count = await db.service.count();
-    if (count >= MAX_SERVICES) {
-      return badRequest(`Limite máximo de ${MAX_SERVICES} serviços atingido`);
-    }
-
     const body = await request.json();
-    const { title, subtitle, description, ctaText, ctaLink, isActive } = body;
+    const { title, subtitle, description, ctaText, ctaLink, includes, isActive } = body;
 
     if (!title || typeof title !== 'string' || title.trim().length === 0)
       return badRequest('Título é obrigatório');
@@ -67,9 +60,11 @@ export async function POST(request: NextRequest) {
     if (ctaText.trim().length > 200)
       return badRequest('Texto do botão deve ter no máximo 200 caracteres');
 
-    // Set order to the end of the list
+    // Set order to the end of the list (appended below)
     const maxOrder = await db.service.aggregate({ _max: { order: true } });
     const nextOrder = (maxOrder._max.order ?? -1) + 1;
+
+    const formattedIncludes = formatIncludes(includes);
 
     const service = await db.service.create({
       data: {
@@ -78,10 +73,13 @@ export async function POST(request: NextRequest) {
         description: description.trim(),
         ctaText: ctaText.trim(),
         ctaLink: ctaLink?.trim() || null,
+        includes: formattedIncludes,
         isActive: isActive !== false,
         order: nextOrder,
       },
     });
+
+    await syncServicesToCmsState();
 
     return NextResponse.json({ service }, { status: 201 });
   } catch (error) {

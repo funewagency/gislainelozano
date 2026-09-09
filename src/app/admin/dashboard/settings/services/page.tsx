@@ -33,7 +33,7 @@ export default function ServicesSettingsPage() {
             Gerenciar Serviços
           </h1>
           <p className="text-xs mt-1" style={{ color: C.muted, fontFamily: 'var(--font-jakarta)' }}>
-            Crie e edite os serviços exibidos no site · máximo de 5
+            Crie, edite e organize os serviços exibidos no site
           </p>
         </div>
       </div>

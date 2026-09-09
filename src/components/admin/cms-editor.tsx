@@ -22,7 +22,6 @@ const SECTION_LABELS: Record<string, string> = {
   painPoints: 'Para Quem É',
   bio: 'Sobre Mim',
   positioning: 'Posicionamento',
-  services: 'Serviços',
   testimonials: 'Feedbacks',
   faq: 'FAQ',
   contact: 'Contato',
@@ -397,7 +396,7 @@ export function CmsEditor() {
         {tab === 'sections' && (
           <div>
             {(data.sectionOrder ?? [])
-              .filter((sec) => sec.id !== 'navbar' && sec.id !== 'footer')
+              .filter((sec) => sec.id !== 'navbar' && sec.id !== 'footer' && sec.id !== 'services')
               .map((sec) => (
                 <SectionEditor
                   key={sec.id}

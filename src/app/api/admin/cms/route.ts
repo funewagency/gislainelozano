@@ -4,6 +4,7 @@ import { globalConfigSchema } from '@/lib/cms-types';
 import { DEFAULT_CMS_DATA, DEFAULT_THEME } from '@/lib/cms-defaults';
 import { unauthorized, serverError, badRequest, rateLimited, requireAuth } from '@/lib/api-utils';
 import { mutationLimiter, shouldRateLimit } from '@/lib/rate-limit';
+import { parseIncludes } from '@/lib/services-sync';
 
 const TENANT = 'gislaine';
 
@@ -110,6 +111,49 @@ export async function GET() {
     }
 
     const data = migrateData(JSON.parse(state.data));
+
+    // Sync with dedicated db.service records if any exist
+    try {
+      if (db && (typeof (db as any).service?.findMany === 'function' || typeof (db as any).$queryRawUnsafe === 'function')) {
+        let dbServices: any[] = [];
+        try {
+          dbServices = await (db as any).$queryRawUnsafe(
+            'SELECT * FROM "Service" ORDER BY "order" ASC'
+          );
+        } catch {
+          if (typeof (db as any).service?.findMany === 'function') {
+            dbServices = await (db as any).service.findMany({
+              orderBy: { order: 'asc' },
+            });
+          }
+        }
+
+        if (dbServices && dbServices.length > 0) {
+          if (!data.services || typeof data.services !== 'object') {
+            data.services = {
+              eyebrow: 'Serviços',
+              titleHtml: 'Serviços e soluções <strong>estratégicas</strong>',
+              items: [],
+            };
+          }
+          (data.services as any).items = dbServices.map((s, idx) => ({
+            id: s.id,
+            number: String(idx + 1).padStart(2, '0'),
+            title: s.title,
+            subtitle: s.subtitle || null,
+            description: s.description,
+            ctaText: s.ctaText,
+            ctaLink: s.ctaLink || null,
+            includes: parseIncludes(s.includes),
+            isActive: s.isActive,
+          }));
+        }
+      }
+    } catch (e) {
+      console.error('[CMS API] Error loading db.service:', e);
+    }
+
+
 
     const revisions = await db.cmsRevision.findMany({
       where: { tenant: TENANT },

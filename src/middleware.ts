@@ -17,8 +17,12 @@ export async function middleware(req: NextRequest) {
     return token;
   }
 
-  // 1. Rota de login e rotas de autenticação (públicas)
-  if (pathname === '/admin/login' || pathname.startsWith('/api/auth/')) {
+  // 1. Rota de login, rotas de autenticação e leitura pública do CMS
+  if (
+    pathname === '/admin/login' ||
+    pathname.startsWith('/api/auth/') ||
+    (pathname === '/api/admin/cms' && req.method === 'GET')
+  ) {
     return NextResponse.next();
   }
 

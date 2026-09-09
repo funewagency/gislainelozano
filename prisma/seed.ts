@@ -37,11 +37,33 @@ async function main() {
       console.log(`ℹ️  CmsState for tenant "${TENANT}" already exists (version ${existingState.version}), skipping seed`)
     }
 
+    const existingServices = await (prisma as any).service.count();
+    if (existingServices === 0 && DEFAULT_CMS_DATA.services?.items) {
+      console.log('🌱 Seeding services from default CMS data...');
+      for (let i = 0; i < DEFAULT_CMS_DATA.services.items.length; i++) {
+        const item = DEFAULT_CMS_DATA.services.items[i];
+        await (prisma as any).service.create({
+          data: {
+            order: i,
+            title: item.title,
+            subtitle: item.subtitle || null,
+            description: item.description,
+            ctaText: item.ctaText,
+            ctaLink: (item as any).ctaLink || null,
+            includes: item.includes ? JSON.stringify(item.includes) : null,
+            isActive: true,
+          },
+        });
+      }
+      console.log(`✅ Seeded ${DEFAULT_CMS_DATA.services.items.length} default services.`);
+    }
+
     console.log('✅ Seed concluído')
   } finally {
     await prisma.$disconnect()
   }
 }
+
 
 main().catch((e) => {
   console.error(e)

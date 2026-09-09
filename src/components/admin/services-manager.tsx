@@ -27,6 +27,7 @@ interface Service {
   description: string;
   ctaText: string;
   ctaLink: string | null;
+  includes: string | null;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -38,6 +39,7 @@ interface FormData {
   description: string;
   ctaText: string;
   ctaLink: string;
+  includes: string;
   isActive: boolean;
 }
 
@@ -47,10 +49,20 @@ const EMPTY_FORM: FormData = {
   description: '',
   ctaText: '',
   ctaLink: '',
+  includes: '',
   isActive: true,
 };
 
-const MAX_SERVICES = 5;
+function includesToFormText(includes: string | null | undefined): string {
+  if (!includes) return '';
+  try {
+    const parsed = JSON.parse(includes);
+    if (Array.isArray(parsed)) {
+      return parsed.join('\n');
+    }
+  } catch {}
+  return includes;
+}
 
 // ── Inline alert ──────────────────────────────────────────────────────────
 
@@ -209,6 +221,19 @@ function ServiceForm({
           />
         </Field>
       </div>
+
+      <Field
+        label="Itens Inclusos (O que está incluso)"
+        hint="Opcional — digite um item por linha para exibir na caixa 'O que está incluso'"
+      >
+        <textarea
+          value={form.includes}
+          onChange={(e) => set('includes', e.target.value)}
+          placeholder={'Estrutura completa de posicionamento\nPlanejamento de conteúdo e execução\nFundamentos de tráfego pago'}
+          rows={4}
+          style={{ ...inputStyle, resize: 'vertical' }}
+        />
+      </Field>
 
       <div className="flex items-center gap-3">
         <button
@@ -439,6 +464,30 @@ function ServiceCard({
                   → Abre modal WhatsApp
                 </span>
               )}
+              {(() => {
+                let count = 0;
+                try {
+                  const parsed = JSON.parse(service.includes || '');
+                  if (Array.isArray(parsed)) count = parsed.length;
+                } catch {
+                  if (service.includes) count = service.includes.split('\n').filter(Boolean).length;
+                }
+                if (count > 0) {
+                  return (
+                    <span
+                      className="text-xs px-2.5 py-1 rounded-full font-medium"
+                      style={{
+                        backgroundColor: 'rgba(223,130,60,0.1)',
+                        color: C.accent,
+                        ...bodyFont,
+                      }}
+                    >
+                      ✓ {count} {count === 1 ? 'item incluso' : 'itens inclusos'}
+                    </span>
+                  );
+                }
+                return null;
+              })()}
             </div>
           </div>
         </div>
@@ -577,7 +626,6 @@ export function ServicesManager() {
     }
   };
 
-  const canAdd = services.length < MAX_SERVICES;
 
   if (loading) {
     return (
@@ -599,7 +647,7 @@ export function ServicesManager() {
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div>
           <p className="text-sm" style={{ color: C.muted, ...bodyFont }}>
-            {services.length} de {MAX_SERVICES} serviços cadastrados
+            {services.length} {services.length === 1 ? 'serviço cadastrado' : 'serviços cadastrados'}
           </p>
         </div>
 
@@ -607,14 +655,13 @@ export function ServicesManager() {
           <button
             type="button"
             onClick={() => setEditingId('new')}
-            disabled={!canAdd}
-            className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold rounded-xl transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold rounded-xl transition-all shadow-sm hover:opacity-95 cursor-pointer"
             style={{
-              backgroundColor: canAdd ? C.primary : C.inactive,
+              backgroundColor: C.primary,
               color: C.white,
               ...bodyFont,
             }}
-            title={!canAdd ? `Limite de ${MAX_SERVICES} serviços atingido` : 'Adicionar serviço'}
+            title="Adicionar serviço"
           >
             <Plus size={15} />
             Novo serviço
@@ -625,24 +672,6 @@ export function ServicesManager() {
       {/* Feedback */}
       {feedback && <Alert type={feedback.type} message={feedback.message} />}
 
-      {/* Limit warning */}
-      {!canAdd && !editingId && (
-        <div
-          className="flex items-start gap-2.5 px-4 py-3 rounded-xl text-sm"
-          style={{
-            backgroundColor: C.warning,
-            border: `1px solid #FDE68A`,
-            color: C.warningText,
-            ...bodyFont,
-          }}
-        >
-          <AlertCircle size={16} className="shrink-0 mt-0.5" />
-          <span>
-            Você atingiu o limite máximo de <strong>{MAX_SERVICES} serviços</strong>. Exclua um
-            existente para adicionar um novo.
-          </span>
-        </div>
-      )}
 
       {/* New service form */}
       {editingId === 'new' && (
@@ -712,6 +741,7 @@ export function ServicesManager() {
                     description: service.description,
                     ctaText: service.ctaText,
                     ctaLink: service.ctaLink ?? '',
+                    includes: includesToFormText(service.includes),
                     isActive: service.isActive,
                   }}
                   onSave={(form) => handleUpdate(service.id, form)}

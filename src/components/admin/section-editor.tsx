@@ -88,7 +88,7 @@ export const SectionEditor = memo(function SectionEditor(raw: Props) {
   const isOpen = selectedSection === sectionKey;
   const section = data[sectionKey] as Record<string, unknown>;
 
-  if (!section) return null;
+  if (!section || sectionKey === 'services') return null;
 
   return (
     <div
@@ -153,9 +153,9 @@ export const SectionEditor = memo(function SectionEditor(raw: Props) {
 // ── Testimonials ──────────────────────────────────────────────────────
 
 function TestimonialsEditor({ section, sectionKey, updateField }: any) {
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   if (!section) return null;
   const items: any[] = section.items ?? [];
-  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   const title = section.titleHtml ?? section.title ?? '';
   const eyebrow = section.eyebrow ?? '';
   const description = section.description ?? '';
@@ -235,9 +235,9 @@ function BioEditor({ section, sectionKey, updateField }: any) {
 // ── FAQ ───────────────────────────────────────────────────────────────
 
 function FaqEditor({ section, sectionKey, updateField }: any) {
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   if (!section) return null;
   const items: any[] = section.items ?? [];
-  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   const title = section.titleHtml ?? section.title ?? '';
   const eyebrow = section.eyebrow ?? '';
 
@@ -316,7 +316,6 @@ function SectionFields({ sectionKey, section, updateField, updateSection }: any)
   switch (sectionKey) {
     case 'hero': return <HeroEditor section={section} sectionKey={sectionKey} updateField={updateField} />;
     case 'painPoints': return <PainPointsEditor section={section} sectionKey={sectionKey} updateField={updateField} />;
-    case 'services': return <ServicesEditor section={section} sectionKey={sectionKey} updateField={updateField} />;
     case 'testimonials': return <TestimonialsEditor section={section} sectionKey={sectionKey} updateField={updateField} />;
     case 'faq': return <FaqEditor section={section} sectionKey={sectionKey} updateField={updateField} />;
     case 'whatsappModal': return <WhatsAppModalEditor section={section} sectionKey={sectionKey} updateField={updateField} />;
@@ -332,52 +331,6 @@ function SectionFields({ sectionKey, section, updateField, updateSection }: any)
   }
 }
 
-// ── Services ──────────────────────────────────────────────────────────
-
-function ServicesEditor({ section, sectionKey, updateField }: any) {
-  if (!section) return null;
-  const items: any[] = section.items ?? [];
-  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
-  const title = section.titleHtml ?? section.title ?? '';
-  const eyebrow = section.eyebrow ?? '';
-
-  return (
-    <>
-      <TextField label="Chapéu" value={eyebrow} onChange={(v) => updateField(sectionKey, 'eyebrow', v)} />
-      <RichTextField label="Título" value={title} onChange={(v) => updateField(sectionKey, 'titleHtml', v)} />
-
-      <div className="space-y-2">
-        <label className="text-xs font-semibold uppercase tracking-wider" style={{ color: C.muted }}>
-          Serviços ({items.length})
-        </label>
-        <div className="space-y-2">
-          {items.map((item: any, i: number) => (
-            <SubItemCard
-              key={item.id}
-              title={`${item.number ? item.number + '. ' : ''}${item.title || `Serviço ${i + 1}`}`}
-              isOpen={!!expanded[item.id]}
-              onToggle={() => setExpanded((prev) => ({ ...prev, [item.id]: !prev[item.id] }))}
-              id={`service-${item.id}-content`}
-            >
-              <TextField label="Título" value={item.title} onChange={(v) => {
-                const next = [...items]; next[i] = { ...next[i], title: v }; updateField(sectionKey, 'items', next);
-              }} />
-              <TextField label="Subtítulo" value={item.subtitle || ''} onChange={(v) => {
-                const next = [...items]; next[i] = { ...next[i], subtitle: v }; updateField(sectionKey, 'items', next);
-              }} />
-              <RichTextField label="Descrição" value={item.descriptionHtml || item.description || ''} onChange={(v) => {
-                const next = [...items]; next[i] = { ...next[i], descriptionHtml: v, description: v }; updateField(sectionKey, 'items', next);
-              }} />
-              <TextField label="Texto do CTA" value={item.ctaText} onChange={(v) => {
-                const next = [...items]; next[i] = { ...next[i], ctaText: v }; updateField(sectionKey, 'items', next);
-              }} />
-            </SubItemCard>
-          ))}
-        </div>
-      </div>
-    </>
-  );
-}
 
 // ── WhatsApp Modal ────────────────────────────────────────────────────
 

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { unauthorized, serverError, badRequest, rateLimited, requireAuth } from '@/lib/api-utils';
 import { mutationLimiter, shouldRateLimit } from '@/lib/rate-limit';
+import { syncServicesToCmsState } from '@/lib/services-sync';
 
 function getIp(request: Request): string {
   return request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
@@ -34,9 +35,12 @@ export async function PUT(request: NextRequest) {
       )
     );
 
+    await syncServicesToCmsState();
+
     const services = await db.service.findMany({ orderBy: { order: 'asc' } });
     return NextResponse.json({ services });
   } catch (error) {
     return serverError(error, 'Erro ao reordenar serviços');
   }
 }
+

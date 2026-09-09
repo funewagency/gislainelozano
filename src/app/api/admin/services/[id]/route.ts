@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { unauthorized, serverError, badRequest, rateLimited, requireAuth, notFound } from '@/lib/api-utils';
 import { mutationLimiter, shouldRateLimit } from '@/lib/rate-limit';
+import { formatIncludes, syncServicesToCmsState } from '@/lib/services-sync';
 
 function getIp(request: Request): string {
   return request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
@@ -27,7 +28,7 @@ export async function PUT(
     if (!existing) return notFound('Serviço não encontrado');
 
     const body = await request.json();
-    const { title, subtitle, description, ctaText, ctaLink, isActive } = body;
+    const { title, subtitle, description, ctaText, ctaLink, includes, isActive } = body;
 
     if (title !== undefined) {
       if (typeof title !== 'string' || title.trim().length === 0)
@@ -56,9 +57,12 @@ export async function PUT(
         ...(description !== undefined && { description: description.trim() }),
         ...(ctaText !== undefined && { ctaText: ctaText.trim() }),
         ...(ctaLink !== undefined && { ctaLink: ctaLink?.trim() || null }),
+        ...(includes !== undefined && { includes: formatIncludes(includes) }),
         ...(isActive !== undefined && { isActive }),
       },
     });
+
+    await syncServicesToCmsState();
 
     return NextResponse.json({ service: updated });
   } catch (error) {
@@ -87,8 +91,11 @@ export async function DELETE(
 
     await db.service.delete({ where: { id } });
 
+    await syncServicesToCmsState();
+
     return NextResponse.json({ success: true });
   } catch (error) {
     return serverError(error, 'Erro ao excluir serviço');
   }
 }
+
